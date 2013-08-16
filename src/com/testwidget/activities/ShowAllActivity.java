@@ -30,12 +30,13 @@ public class ShowAllActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_all_layout);
-
+		
 		Intent intent = getIntent();
 		cardNumber = intent.getStringExtra(IntentConstants.CARD_NUMBER);
 		Log.i("SHOWALL", "received "+cardNumber);
 		
 		CardDescriptor cd = dp.getByNumber(cardNumber);
+		setTitle(cd.getCardName());
 
 		prepareTextViews(cd);
 	}
@@ -78,7 +79,7 @@ public class ShowAllActivity extends Activity {
 				rechargeInfo.getRechargeLocation());
 		setDescription(R.id.recharged_by_block,
 				resources.getString(R.string.recharge_amount_string),
-				String.valueOf(rechargeInfo.getRechargeAmount()));
+				rechargeInfo.getRechargeAmountString());
 		setDescription(R.id.last_updated_block,
 				resources.getString(R.string.last_updated_string),
 				cd.getLastUpdated().getFormattedString());
@@ -106,7 +107,7 @@ public class ShowAllActivity extends Activity {
 		Log.i("menu click", item.getItemId() + "");
 		switch (item.getItemId()) {
 		case R.id.add_new_card_item: {
-			//TODO transition to another activity
+			//FIXME transition to another activity
 			return true;
 		}
 		case R.id.update_item: {

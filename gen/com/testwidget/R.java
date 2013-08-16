@@ -14,11 +14,6 @@ public final class R {
         public static final int text_color=0x7f050000;
     }
     public static final class dimen {
-        /** 
-         Customize dimensions originally defined in res/values/dimens.xml (such as
-         screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
-    
-         */
         public static final int activity_horizontal_margin=0x7f060001;
         public static final int activity_vertical_margin=0x7f060002;
         public static final int widget_margin=0x7f060000;
@@ -36,41 +31,39 @@ public final class R {
         public static final int widget_bg=0x7f020009;
     }
     public static final class id {
-        public static final int add_new_card_item=0x7f0a0023;
+        public static final int add_new_card_item=0x7f0a0021;
         public static final int button1=0x7f0a0017;
-        public static final int button_layout=0x7f0a0020;
-        public static final int cancel_button=0x7f0a001a;
+        public static final int button_layout=0x7f0a001e;
         public static final int card_balance_block=0x7f0a0005;
-        public static final int card_balance_tf=0x7f0a001e;
+        public static final int card_balance_tf=0x7f0a001c;
         public static final int card_name_block=0x7f0a0004;
-        public static final int card_name_tf=0x7f0a0018;
+        public static final int card_name_tf=0x7f0a001b;
         public static final int card_number_block=0x7f0a0006;
         public static final int card_number_tf=0x7f0a0014;
         public static final int card_type_block=0x7f0a0007;
-        public static final int clickable_layout=0x7f0a001d;
-        public static final int confirm_button=0x7f0a0019;
+        public static final int clickable_layout=0x7f0a001a;
         public static final int description_tf=0x7f0a0000;
         public static final int editText1=0x7f0a0016;
         public static final int general_info_tf=0x7f0a0003;
         public static final int imageView1=0x7f0a0015;
         public static final int last_activated_block=0x7f0a0008;
-        public static final int last_modified_tf=0x7f0a001f;
+        public static final int last_modified_tf=0x7f0a001d;
         public static final int last_updated_block=0x7f0a0013;
         public static final int last_usage_info_tf=0x7f0a000a;
         public static final int last_used_charge_type_block=0x7f0a000e;
         public static final int last_used_date_block=0x7f0a000b;
         public static final int last_used_transport_number_block=0x7f0a000d;
         public static final int last_used_transport_type_block=0x7f0a000c;
-        public static final int next_card_button=0x7f0a0021;
-        public static final int prev_card_button=0x7f0a0022;
+        public static final int next_card_button=0x7f0a001f;
+        public static final int prev_card_button=0x7f0a0020;
         public static final int recharge_info_tf=0x7f0a000f;
         public static final int recharged_at_block=0x7f0a0011;
         public static final int recharged_by_block=0x7f0a0012;
         public static final int recharged_on_block=0x7f0a0010;
-        public static final int root_layout=0x7f0a001b;
+        public static final int root_layout=0x7f0a0018;
         public static final int scrollView1=0x7f0a0002;
-        public static final int update_button=0x7f0a001c;
-        public static final int update_item=0x7f0a0024;
+        public static final int update_button=0x7f0a0019;
+        public static final int update_item=0x7f0a0022;
         public static final int valid_until_block=0x7f0a0009;
         public static final int value_tf=0x7f0a0001;
     }
@@ -80,8 +73,7 @@ public final class R {
         public static final int show_all_layout=0x7f030002;
         public static final int test_nfc_activity=0x7f030003;
         public static final int update_layout=0x7f030004;
-        public static final int w=0x7f030005;
-        public static final int widget_layout=0x7f030006;
+        public static final int widget_layout=0x7f030005;
     }
     public static final class menu {
         public static final int menu=0x7f090000;

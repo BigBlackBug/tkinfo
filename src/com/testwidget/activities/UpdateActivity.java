@@ -136,7 +136,7 @@ public class UpdateActivity extends Activity {
 				}
 
 				@Override
-				protected void onPostExecute(CardDescriptor result) {
+				protected void onPostExecute(final CardDescriptor result) {
 					if (result != null) {
 						CardDescriptor old = App.getDataProvider().getByNumber(
 								result.getCardNumber());
@@ -144,6 +144,15 @@ public class UpdateActivity extends Activity {
 						App.getDataProvider().saveOrUpdateCard(result);
 						TranskartWidget.updateAllWidgets(activity.getApplicationContext());
 						activity.setResult(RESULT_OK);
+						activity.runOnUiThread(new Runnable() {
+						    public void run() {
+								Toast.makeText(activity,
+										"Информация о карте '"
+												+ result.getCardName()
+												+ "' была успешно обновлена",
+										Toast.LENGTH_LONG).show();
+						    }
+						});
 					} else {
 						activity.setResult(RESULT_CANCELED);
 					}

@@ -125,7 +125,7 @@ public class TranskartWidget extends AppWidgetProvider {
 				Log.i("handler", "bottom:" + rect.bottom + " top:" + rect.top
 						+ " left:" + rect.left + " right:" + rect.right);
 				Intent intent2 = new Intent(context, UpdateActivity.class);
-				intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				intent2.putExtra(IntentConstants.LEFT_BORDER_INDEX, rect.left);
 				intent2.putExtra(IntentConstants.BOTTOM_BORDER_INDEX, rect.bottom);
 				intent2.putExtra(IntentConstants.WIDTH, rect.right - rect.left);

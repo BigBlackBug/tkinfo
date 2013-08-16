@@ -4,12 +4,10 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -57,7 +55,7 @@ public class UpdateActivity extends Activity {
 		@Override
 		protected void onPostExecute(Drawable captcha) {
 			if(throwable == null){
-				ImageView c = (ImageView) activity.findViewById(R.id.imageView1);
+				ImageView c = (ImageView) activity.findViewById(R.id.captcha_image_view);
 				Log.i("update","width "+c.getWidth()+" height "+c.getHeight());;
 				c.setScaleType(ScaleType.FIT_CENTER);
 				c.setImageDrawable(captcha);
@@ -82,6 +80,7 @@ public class UpdateActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.update_layout);
+		setFinishOnTouchOutside(true);
 		// overridePendingTransition
 		cardNumber = getIntent().getStringExtra(IntentConstants.CARD_NUMBER);
 		//TODO display rotating something
@@ -162,7 +161,7 @@ public class UpdateActivity extends Activity {
 			}.execute();
 		}
 	}
-
+	//FIXME position
 	@Override
 	public void onAttachedToWindow() {
 		super.onAttachedToWindow();
@@ -177,12 +176,8 @@ public class UpdateActivity extends Activity {
 		int width = intent.getIntExtra(IntentConstants.WIDTH, 0);
 		Log.i("activity", "received left " + left + "bot " + bot + "width "
 				+ width);
-		DisplayMetrics metrics = getApplication().getApplicationContext()
-				.getResources().getDisplayMetrics();
-		Log.i("activity", "density is " + metrics.density);
 		lp.x = left;
 		lp.y = bot;
-		// lp.width = (int) (width * metrics.density + 0.5f);
 		getWindowManager().updateViewLayout(view, lp);
 	}
 

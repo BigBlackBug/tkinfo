@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/general_info_tf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
+            android:inputType="none"
+            android:text="@string/general_info_tf_string"
+            android:textSize="12sp" />
+
+        <include
+            android:id="@+id/card_name_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/card_descriptor_item" />
+
+        <include
+            android:id="@+id/card_balance_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/card_descriptor_item" />
+
+        <include
+            android:id="@+id/card_number_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/card_descriptor_item" />
+
+        <include
+            android:id="@+id/card_type_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/card_descriptor_item" />
+
+        <include
+            android:id="@+id/last_activated_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/card_descriptor_item" />
+
+        <include
+            android:id="@+id/valid_until_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/card_descriptor_item" />
+
+        <include
+            layout="@layout/separator" />
+
+        <TextView
+            android:id="@+id/last_usage_info_tf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
+            android:inputType="none"
+            android:text="@string/last_usage_info_tf_string"
+            android:textSize="12sp" />
+
+        <include
+            android:id="@+id/last_used_date_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/card_descriptor_item" />
+
+        <include
+            android:id="@+id/last_used_transport_type_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/card_descriptor_item" />
+
+        <include
+            android:id="@+id/last_used_transport_number_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/card_descriptor_item" />
+
+        <include
+            android:id="@+id/last_used_charge_type_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/card_descriptor_item" />
+
+        <include
+            layout="@layout/separator" />
+
+        <TextView
+            android:id="@+id/recharge_info_tf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
+            android:inputType="none"
+            android:text="@string/recharge_info_tf_string"
+            android:textSize="12sp" />
+
+        <include
+            android:id="@+id/recharged_on_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/card_descriptor_item" />
+
+        <include
+            android:id="@+id/recharged_at_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/card_descriptor_item" />
+
+        <include
+            android:id="@+id/recharged_by_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/card_descriptor_item" />
+
+        <include
+            layout="@layout/separator" />
+
+        <include
+            android:id="@+id/last_updated_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/card_descriptor_item" />
+        <include
+            layout="@layout/separator" />
+    </LinearLayout>
+
+</ScrollView>

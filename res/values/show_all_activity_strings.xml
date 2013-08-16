@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="general_info_tf_string">Общая информация</string>
+    <string name="last_usage_info_tf_string">Последнее использование</string>
+    <string name="recharge_info_tf_string">Информация о пополнении</string>
+    
+    <string name="card_name_string">Имя карты</string>
+    <string name="card_balance_string">Баланс</string>
+    <string name="card_number_string">Номер карты</string>
+    <string name="card_type_string">Тип карты</string>
+    <string name="last_activated_string">Дата активации</string>
+    <string name="valid_until_string">Активна до</string>
+    
+    <string name="date_string">Дата</string>
+    <string name="last_used_transport_type_string">Тип транспорта</string>
+    <string name="last_used_transport_number_string">Номер маршрута</string>
+    <string name="last_used_charge_type_string">Операция</string>
+    
+    <string name="recharge_location_string">Пункт пополнения</string>
+    <string name="recharge_amount_string">Ресурс был пополнен на</string>
+    
+    <string name="last_updated_string">Последнее обновление</string>
+</resources>

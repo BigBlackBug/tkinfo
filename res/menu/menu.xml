@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/add_new_card_item"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="add"/>
+    <item
+        android:id="@+id/update_item"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="update"/>
+
+</menu>

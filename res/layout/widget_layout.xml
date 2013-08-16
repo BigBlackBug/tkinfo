@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/widget_bg"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:padding="@dimen/widget_margin" >
+
+    <!-- WHY baseline? -->
+
+    <LinearLayout
+        android:layout_width="70dp"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" >
+
+        <ImageButton
+            android:id="@+id/update_button"
+            android:layout_width="60dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:scaleType="fitCenter"
+            android:src="@drawable/s" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/clickable_layout"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:descendantFocusability="beforeDescendants"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:orientation="horizontal" >
+ <!-- gravity? -->
+            <TextView
+                android:id="@+id/card_name_tf"
+               android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent"
+                android:layout_gravity="fill_vertical"
+                android:gravity="right|center_vertical" 
+               
+                android:lines="1"
+                android:maxLines="1"
+                android:paddingRight="5dp"
+                android:text="TextView"
+                android:textColor="@color/text_color" />
+ <!-- gravity? -->
+            <TextView
+                android:id="@+id/card_balance_tf"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent"
+                android:layout_gravity="fill_vertical"
+                android:gravity="left|center_vertical"
+                android:lines="1"
+                android:maxLines="1"
+                android:paddingLeft="5dp"
+                android:text="TextView"
+                android:textColor="@color/text_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/card_number_tf"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="TextView"
+                android:textColor="@color/text_color" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/last_modified_tf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="left|center_vertical"
+            android:lines="1"
+            android:maxLines="1"
+            android:paddingBottom="3dp"
+            android:text="last mod"
+            android:textColor="@color/text_color"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="40dp"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <ImageButton
+            android:id="@+id/next_card_button"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:background="#00000000"
+            android:paddingBottom="3dp"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/up_arrow" >
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/prev_card_button"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:background="#00000000"
+            android:paddingBottom="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="3dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/down_arrow" />
+    </LinearLayout>
+
+</LinearLayout>

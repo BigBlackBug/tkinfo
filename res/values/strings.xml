@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Transkart Widget</string>
+    <string name="last_updated">Последнее обновление: %1$s</string>
+    <string name="card_name">Карта: %1$s</string>
+    <string name="card_number">Номер карты: %1$s</string>
+    <string name="card_balance">Баланс: %1$s руб</string>
+    <string name="title_activity_show_all">ShowAllActivity</string>
+    <string name="add_card">+</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_show_all_activity2">ShowAllActivity2</string>
+
+</resources>

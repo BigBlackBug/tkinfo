@@ -105,6 +105,7 @@ public class AddNewCardActivity extends Activity {
 		protected void onPostExecute(Drawable captcha) {
 			if(throwable == null){
 				activity.runOnUiThread(new Runnable() {
+					@Override
 					public void run() {
 						pb.setVisibility(View.GONE);
 						captchaLayout.setVisibility(View.VISIBLE);

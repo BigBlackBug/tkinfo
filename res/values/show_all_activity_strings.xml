@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="title_activity_show_info">Информация о карте</string>
+    
     <string name="general_info_tf_string">Общая информация</string>
     <string name="last_usage_info_tf_string">Последнее использование</string>
     <string name="recharge_info_tf_string">Информация о пополнении</string>

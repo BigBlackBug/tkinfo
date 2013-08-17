@@ -10,7 +10,10 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/new_card_name"
-        android:inputType="textAutoComplete" />
+        android:inputType="textAutoComplete" >
+
+        <requestFocus />
+    </EditText>
 
     <EditText
         android:id="@+id/card_number_tf"
@@ -60,7 +63,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
-        <Button
+
+        <Button
             android:id="@+id/confirm_button"
             style="@android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"

@@ -3,22 +3,18 @@ package com.testwidget.activities;
 import java.io.IOException;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.testwidget.App;
 import com.testwidget.App.Duration;
@@ -76,7 +72,10 @@ public class UpdateActivity extends Activity {
 				c.setImageDrawable(scaledCaptcha);
 				Button ok = (Button) activity.findViewById(R.id.button1);
 				ok.setOnClickListener(new CardDescriptorUpdater(session));
-			}else{
+				
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT , 0);
+			} else {
 				App.showToast(activity, "SOME ERROR>I DONT'T KNOW WHAT HAPPENED", Duration.LONG);
 			}
 		}

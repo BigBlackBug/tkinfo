@@ -3,7 +3,6 @@ package com.testwidget.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -36,8 +35,6 @@ public class ShowAllActivity extends Activity {
 		Log.i("SHOWALL", "received "+cardNumber);
 		
 		CardDescriptor cd = dp.getByNumber(cardNumber);
-		setTitle(cd.getCardName());
-
 		prepareTextViews(cd);
 	}
 
@@ -114,7 +111,7 @@ public class ShowAllActivity extends Activity {
 		case R.id.update_item: {
 //			Rect rect = getIntent().getSourceBounds();
 			Intent intent = new Intent(this, UpdateActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //			intent.putExtra(IntentConstants.LEFT_BORDER_INDEX, rect.left);
 //			intent.putExtra(IntentConstants.BOTTOM_BORDER_INDEX, rect.bottom);
 //			intent.putExtra(IntentConstants.WIDTH, rect.right - rect.left);
@@ -127,6 +124,7 @@ public class ShowAllActivity extends Activity {
 		}
 		}
 	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.i("show all", "returned");

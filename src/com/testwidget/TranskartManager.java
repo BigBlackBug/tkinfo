@@ -20,7 +20,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-import com.testwidget.CardDescriptor.DateWrapper;
 import com.testwidget.CardDescriptor.LastUsageInfo;
 import com.testwidget.CardDescriptor.RechargeInfo;
 

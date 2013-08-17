@@ -2,13 +2,13 @@
 
     <item
         android:id="@+id/add_new_card_item"
+        android:icon="@drawable/add_card_icon"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom"
-        android:title="@string/add_card"/>
+        android:showAsAction="ifRoom"/>
     <item
         android:id="@+id/update_item"
+        android:icon="@drawable/navigation_refresh"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom"
-        android:title="@string/update_card"/>
+        android:showAsAction="ifRoom"/>
 
 </menu>

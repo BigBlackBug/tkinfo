@@ -15,8 +15,6 @@ import android.nfc.tech.NfcA;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.testwidget.App;
 import com.testwidget.R;
 import com.testwidget.App.Duration;
@@ -88,7 +86,6 @@ public class NFCActivity extends Activity {
 					mTextView.setText(String.valueOf(num));
 				} else {
 					// Authentication failed - Handle it
-
 				}
 			} catch (IOException e) {
 				Log.e(TAG, "connection dropped", e);

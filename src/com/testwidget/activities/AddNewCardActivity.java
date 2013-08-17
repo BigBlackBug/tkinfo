@@ -1,9 +1,15 @@
 package com.testwidget.activities;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.MifareClassic;
+import android.nfc.tech.NfcA;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -29,10 +35,12 @@ public class AddNewCardActivity extends Activity {
 	private ProgressBar pb;
 	private LinearLayout captchaLayout;
 	private TextView captchaTextView;
+	private TextView cardNumberTf;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.i("add", "on create");
 		setContentView(R.layout.activity_add_new_card);
 		
 		try {
@@ -45,6 +53,7 @@ public class AddNewCardActivity extends Activity {
 		pb = (ProgressBar) findViewById(R.id.progressBar1);
 		captchaLayout = (LinearLayout) findViewById(R.id.captcha_layout);
 		captchaTextView = (TextView) findViewById(R.id.captcha_text_view_);
+		cardNumberTf = (TextView) findViewById(R.id.card_number_tf);
 		
 		Button backButton = (Button) findViewById(R.id.back_button);
 
@@ -69,9 +78,61 @@ public class AddNewCardActivity extends Activity {
 				}
 			}
 		});
-
+		
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.i("add", "on resume");
+		NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+		if (nfcAdapter != null) {
+			App.setupForegroundDispatch(this, nfcAdapter);
+		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.i("add", "on pause");
+		NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+		if (nfcAdapter != null) {
+			App.stopForegroundDispatch(this, nfcAdapter);
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		String action = intent.getAction();
+		if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
+			Tag intentTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+			MifareClassic mfc = MifareClassic.get(intentTag);
+			byte[] data;
+
+			try {
+				mfc.connect();
+				
+				int blockIndex = 0;
+				int sectorIndex = 0;
+				boolean auth = mfc.authenticateSectorWithKeyA(sectorIndex,
+						MifareClassic.KEY_DEFAULT);
+				if (auth) {
+					data = mfc.readBlock(blockIndex);
+
+					ByteBuffer wrapped = ByteBuffer.wrap(new byte[] { 00, 00,
+							00, 00, data[3], data[2], data[1], data[0] });
+					long cardNumber = wrapped.getLong(); 
+
+					cardNumberTf.setText(String.valueOf(cardNumber));
+				} else {
+					//TODO Authentication failed - Handle it
+				}
+			} catch (IOException e) {
+				Log.e("tag", "connection dropped", e);
+			}
+		}
+	}
+
 	private class CaptchaGrabber extends AsyncTask<Void, Void, Drawable> {
 		
 		private static final double SCALE_COEFFICIENT = 1.5;

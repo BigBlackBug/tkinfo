@@ -2,10 +2,16 @@ package com.testwidget;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentFilter.MalformedMimeTypeException;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.nfc.NfcAdapter;
+import android.nfc.tech.MifareClassic;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -67,6 +73,33 @@ public class App extends Application {
 		return new BitmapDrawable(resources,
 				Bitmap.createScaledBitmap(bitmap, (int)(bw*scaleX),
 						(int)(bh*scaleY), true));
+	}
+	
+	public static void setupForegroundDispatch(final Activity activity,
+			NfcAdapter adapter){
+		final Intent intent = new Intent(activity.getApplicationContext(),
+				activity.getClass());
+		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		final PendingIntent pendingIntent = PendingIntent.getActivity(
+				activity.getApplicationContext(), 0, intent, 0);
+		IntentFilter[] filters = new IntentFilter[1];
+		String[][] techList = new String[][] { new String[] { MifareClassic.class
+				.getName() } };
+		
+		filters[0] = new IntentFilter();
+		filters[0].addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
+		try {
+			filters[0].addDataType("*/*");
+		} catch (MalformedMimeTypeException e) {
+			//never happens
+		}
+		adapter.enableForegroundDispatch(activity, pendingIntent, filters,
+				techList);
+	}
+
+	public static void stopForegroundDispatch(final Activity activity,
+			NfcAdapter adapter) {
+		adapter.disableForegroundDispatch(activity);
 	}
 
 }

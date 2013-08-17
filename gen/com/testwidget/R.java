@@ -19,20 +19,21 @@ public final class R {
     }
     public static final class drawable {
         public static final int add_card_icon=0x7f020000;
-        public static final int body=0x7f020001;
-        public static final int down_arrow=0x7f020002;
-        public static final int down_arrow_pressed=0x7f020003;
-        public static final int layout_border=0x7f020004;
-        public static final int logo=0x7f020005;
-        public static final int navigation_refresh=0x7f020006;
-        public static final int next_button_drawable=0x7f020007;
-        public static final int prev_button_drawable=0x7f020008;
-        public static final int refresh=0x7f020009;
-        public static final int refresh_pressed=0x7f02000a;
-        public static final int up_arrow=0x7f02000b;
-        public static final int up_arrow_pressed=0x7f02000c;
-        public static final int update_button_drawable=0x7f02000d;
-        public static final int widget_bg=0x7f02000e;
+        public static final int add_card_icon_nfc=0x7f020001;
+        public static final int body=0x7f020002;
+        public static final int down_arrow=0x7f020003;
+        public static final int down_arrow_pressed=0x7f020004;
+        public static final int layout_border=0x7f020005;
+        public static final int logo=0x7f020006;
+        public static final int navigation_refresh=0x7f020007;
+        public static final int next_button_drawable=0x7f020008;
+        public static final int prev_button_drawable=0x7f020009;
+        public static final int refresh=0x7f02000a;
+        public static final int refresh_pressed=0x7f02000b;
+        public static final int up_arrow=0x7f02000c;
+        public static final int up_arrow_pressed=0x7f02000d;
+        public static final int update_button_drawable=0x7f02000e;
+        public static final int widget_bg=0x7f02000f;
     }
     public static final class id {
         public static final int add_new_card_item=0x7f0a0028;

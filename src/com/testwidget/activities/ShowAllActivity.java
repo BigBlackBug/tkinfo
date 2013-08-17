@@ -3,6 +3,7 @@ package com.testwidget.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -96,7 +97,27 @@ public class ShowAllActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu, menu);
+		MenuItem findItem = menu.findItem(R.id.add_new_card_item);
+		NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+		if (nfcAdapter != null && nfcAdapter.isEnabled()) {
+			findItem.setIcon(getResources().getDrawable(R.drawable.add_card_icon_nfc));
+		}
+//		findItem.setI
 		return true;
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.i("showall", "on resume");
+		invalidateOptionsMenu();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.i("showall", "on pause");
+		invalidateOptionsMenu();
 	}
 
 	@Override

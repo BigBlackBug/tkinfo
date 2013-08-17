@@ -47,7 +47,7 @@ public class TranskartWidget extends AppWidgetProvider {
 			} else {
 				RemoteViews views = new RemoteViews(context.getPackageName(),
 						R.layout.widget_empty_layout);
-				
+				setAddCardIntent(context, views);
 				appWidgetManager.updateAppWidget(widgetId, views);
 			}
 

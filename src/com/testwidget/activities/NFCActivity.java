@@ -15,8 +15,11 @@ import android.nfc.tech.NfcA;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.testwidget.App;
 import com.testwidget.R;
+import com.testwidget.App.Duration;
 
 public class NFCActivity extends Activity {
 
@@ -28,37 +31,36 @@ public class NFCActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.test_nfc_activity);
-//		mTextView = (TextView) findViewById(R.id.card_number_tf);
-//		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-//		if (mNfcAdapter == null) {
-//			Toast.makeText(this, "This device doesn't support NFC.",
-//					Toast.LENGTH_LONG).show();
-//			finish();
-//			return;
-//		}
-//		if (!mNfcAdapter.isEnabled()) {
-//			mTextView.setText("NFC is disabled.");
-//		} else {
-//			mTextView.setText("NFC is enabled");
-//		}
-//		handleIntent(getIntent());
+		mTextView = (TextView) findViewById(R.id.card_number_tf);
+		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+		if (mNfcAdapter == null) {
+			App.showToast(this, "This device doesn't support NFC.", Duration.LONG);
+			finish();
+			return;
+		}
+		if (!mNfcAdapter.isEnabled()) {
+			mTextView.setText("NFC is disabled.");
+		} else {
+			mTextView.setText("NFC is enabled");
+		}
+		handleIntent(getIntent());
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-//		setupForegroundDispatch(this, mNfcAdapter);
+		setupForegroundDispatch(this, mNfcAdapter);
 	}
 
 	@Override
 	protected void onPause() {
-//		stopForegroundDispatch(this, mNfcAdapter);
+		stopForegroundDispatch(this, mNfcAdapter);
 		super.onPause();
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-//		handleIntent(intent);
+		handleIntent(intent);
 	}
 
 	private void handleIntent(Intent intent) {
@@ -104,7 +106,7 @@ public class NFCActivity extends Activity {
 		IntentFilter[] filters = new IntentFilter[1];
 		String[][] techList = new String[][] { new String[] { MifareClassic.class
 				.getName() } };
-		// Notice that this is the same filter as in our manifest.
+		
 		filters[0] = new IntentFilter();
 		filters[0].addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
 		try {

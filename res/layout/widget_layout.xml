@@ -25,7 +25,7 @@
             android:layout_weight="1"
             android:background="#00000000"
             android:scaleType="fitCenter"
-            android:src="@drawable/s" />
+            android:src="@drawable/update_button_drawable" />
     </LinearLayout>
 
     <LinearLayout
@@ -52,9 +52,6 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="fill_vertical"
                 android:gravity="right|center_vertical" 
-               
-                android:lines="1"
-                android:maxLines="1"
                 android:paddingRight="5dp"
                 android:text="TextView"
                 android:textColor="@color/text_color" />
@@ -66,8 +63,6 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="fill_vertical"
                 android:gravity="left|center_vertical"
-                android:lines="1"
-                android:maxLines="1"
                 android:paddingLeft="5dp"
                 android:text="TextView"
                 android:textColor="@color/text_color" />
@@ -120,7 +115,7 @@
             android:paddingRight="5dp"
             android:paddingTop="5dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/up_arrow" >
+            android:src="@drawable/next_button_drawable" >
         </ImageButton>
 
         <ImageButton
@@ -133,7 +128,7 @@
             android:paddingRight="5dp"
             android:paddingTop="3dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/down_arrow" />
+            android:src="@drawable/prev_button_drawable" />
     </LinearLayout>
 
 </LinearLayout>

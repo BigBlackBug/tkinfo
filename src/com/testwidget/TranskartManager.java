@@ -61,7 +61,7 @@ public class TranskartManager {
 			Elements img = initialDocument.getElementsByTag(IMAGE_TAG);
 			if (img.size() != 1) {
 				throw new RuntimeException(
-						"the format of thepage has changed. contact the developer");
+						"the format of the page has changed. contact the developer");
 			}
 
 			String absUrl = img.get(0).absUrl(SRC_TAG);

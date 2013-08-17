@@ -24,6 +24,7 @@
         <activity
             android:name="com.testwidget.activities.UpdateActivity"
             android:excludeFromRecents="true"
+            android:noHistory="true"
             android:label="LABEL"
             android:theme="@style/MyTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -54,7 +55,12 @@
 
         <activity
             android:name="com.testwidget.activities.ShowAllActivity"
-            android:label="@string/title_activity_show_all"
+            android:theme="@android:style/Theme.Holo.Light" 
+           >
+        </activity>
+        <activity
+            android:name="com.testwidget.activities.AddNewCardActivity"
+            android:label="@string/title_activity_add_new_card"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
     </application>

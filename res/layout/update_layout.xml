@@ -7,13 +7,13 @@
     android:orientation="vertical" >
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/captcha_image_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/body" />
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/captcha_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"

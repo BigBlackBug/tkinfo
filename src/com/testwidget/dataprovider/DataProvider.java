@@ -99,6 +99,13 @@ public class DataProvider {
 			// TODO handler. unable to persist blablabla
 		}
 	}
+	
+	public void saveCard(CardDescriptor descriptor) throws DuplicateCardException{
+		if(data.containsKey(descriptor.getCardNumber())){
+			throw new DuplicateCardException();
+		}
+		saveOrUpdateCard(descriptor);
+	}
 
 	private CardDescriptor loadCardDescriptor(File cardFile)
 			throws IOException, CardLoadingException {
@@ -118,6 +125,10 @@ public class DataProvider {
 	}
 
 	public static class NoDataException extends RuntimeException {
+
+	}
+	
+	public static class DuplicateCardException extends RuntimeException {
 
 	}
 }

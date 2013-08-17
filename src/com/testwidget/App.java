@@ -1,11 +1,10 @@
 package com.testwidget;
 
-import java.util.Date;
-
+import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.testwidget.CardDescriptor.DateWrapper;
 import com.testwidget.dataprovider.DataProvider;
 //3894706279 2938811773
 public class App extends Application {
@@ -34,6 +33,26 @@ public class App extends Application {
 
 	public static DataProvider getDataProvider() {
 		return dataProvider;
+	}
+	
+	public enum Duration{
+		LONG(Toast.LENGTH_LONG),
+		SHORT(Toast.LENGTH_SHORT);
+		private int value;
+		private Duration(int value){
+			this.value=value;
+		}
+	}
+	
+	public static void showToast(final Activity activity, final String text,
+			final Duration duration) {
+		activity.runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				Toast.makeText(activity, text, duration.value).show();
+			}
+		});
 	}
 
 }

@@ -107,18 +107,19 @@ public class ShowAllActivity extends Activity {
 		Log.i("menu click", item.getItemId() + "");
 		switch (item.getItemId()) {
 		case R.id.add_new_card_item: {
-			//FIXME transition to another activity
+			Intent intent = new Intent(this, AddNewCardActivity.class);
+			startActivity(intent);
 			return true;
 		}
 		case R.id.update_item: {
 			Rect rect = getIntent().getSourceBounds();
-			Intent intent2 = new Intent(this, UpdateActivity.class);
-//			intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			intent2.putExtra(IntentConstants.LEFT_BORDER_INDEX, rect.left);
-			intent2.putExtra(IntentConstants.BOTTOM_BORDER_INDEX, rect.bottom);
-			intent2.putExtra(IntentConstants.WIDTH, rect.right - rect.left);
-			intent2.putExtra(IntentConstants.CARD_NUMBER,cardNumber);
-			startActivityForResult(intent2, REQ_CODE);
+			Intent intent = new Intent(this, UpdateActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra(IntentConstants.LEFT_BORDER_INDEX, rect.left);
+			intent.putExtra(IntentConstants.BOTTOM_BORDER_INDEX, rect.bottom);
+			intent.putExtra(IntentConstants.WIDTH, rect.right - rect.left);
+			intent.putExtra(IntentConstants.CARD_NUMBER,cardNumber);
+			startActivityForResult(intent, REQ_CODE);
 			return true;
 		}
 		default: {

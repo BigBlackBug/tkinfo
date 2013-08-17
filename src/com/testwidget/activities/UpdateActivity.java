@@ -16,34 +16,45 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.testwidget.App;
 import com.testwidget.CardDescriptor;
 import com.testwidget.R;
 import com.testwidget.TranskartManager;
+import com.testwidget.App.Duration;
 import com.testwidget.TranskartManager.DocumentValidationException;
 import com.testwidget.TranskartManager.TranskartSession;
 
 public class UpdateActivity extends Activity {
 
-	private static class Actor extends AsyncTask<TranskartManager, Void, Drawable>{
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(new ProgressBar(this));
+		setFinishOnTouchOutside(true);
+		try {
+			new CaptchaHandler(this).execute();
+		} catch (Exception e) {
+			Log.e("activity", "blabla error", e);
+		}
+	}
+	
+	private static class CaptchaHandler extends AsyncTask<Void, Void, Drawable>{
 		private Throwable throwable;
 		private TranskartSession session;
-		private String cardNumber;
 		private Activity activity;
 		
-		public Actor(String cardNumber, Activity activity) {
-			this.cardNumber = cardNumber;
+		public CaptchaHandler(Activity activity) {
 			this.activity = activity;
 		}
 		@Override
 		protected Drawable doInBackground(
-				TranskartManager... params) {
+				Void... params) {
 			try {
-				TranskartManager manager = params[0];
-				this.session = manager
-						.startSession(cardNumber);
+				TranskartManager manager = new TranskartManager(activity);
+				this.session = manager.startSession();
 				return session.getCaptcha();
 				
 			} catch (Throwable t) {
@@ -52,9 +63,11 @@ public class UpdateActivity extends Activity {
 			}
 			
 		}
+		
 		@Override
 		protected void onPostExecute(Drawable captcha) {
 			if(throwable == null){
+				activity.setContentView(R.layout.update_layout);
 				ImageView c = (ImageView) activity.findViewById(R.id.captcha_image_view);
 				Log.i("update","width "+c.getWidth()+" height "+c.getHeight());;
 				c.setScaleType(ScaleType.FIT_CENTER);
@@ -64,33 +77,10 @@ public class UpdateActivity extends Activity {
 				ok.setOnClickListener(new CardDescriptorUpdater(session,
 						activity));
 			}else{
-				activity.runOnUiThread(new Runnable() {
-				    public void run() {
-				        Toast.makeText(activity, "SOME ERROR>I DONT'T KNOW WHAT HAPPENED", Toast.LENGTH_LONG).show();
-				    }
-				});
+				App.showToast(activity, "SOME ERROR>I DONT'T KNOW WHAT HAPPENED", Duration.LONG);
 			}
 		}
 		
-	}
-	
-	private String cardNumber;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.update_layout);
-		setFinishOnTouchOutside(true);
-		// overridePendingTransition
-		cardNumber = getIntent().getStringExtra(IntentConstants.CARD_NUMBER);
-		//TODO display rotating something
-		try {
-			TranskartManager m = new TranskartManager(this);
-			new Actor(cardNumber, this).execute(m);
-		} catch (Exception e) {
-			Log.e("activity", "blabla error", e);
-		}
-
 	}
 
 	private static class CardDescriptorUpdater implements View.OnClickListener {
@@ -109,29 +99,23 @@ public class UpdateActivity extends Activity {
 
 				@Override
 				protected CardDescriptor doInBackground(Void... params) {
-					EditText et = (EditText) activity.findViewById(R.id.editText1);
+					EditText et = (EditText) activity.findViewById(R.id.captcha_text_view);
 					Editable captchaValue = et.getText();
 					try {
+						String cardNumber = activity.getIntent()
+								.getStringExtra(IntentConstants.CARD_NUMBER);
 						CardDescriptor cardDescriptor = s
-								.getCardDescriptor(String.valueOf(captchaValue
-										.toString()));
+								.getCardDescriptor(captchaValue
+										.toString(), cardNumber);
 						return cardDescriptor;
 					} catch (IOException e) {
-						Log.e("activity", "blabla click error", e);
-						activity.runOnUiThread(new Runnable() {
-						    public void run() {
-						        Toast.makeText(activity, "IO EXCPETION", Toast.LENGTH_LONG).show();
-						    }
-						});
-						return null;
+						App.showToast(activity, "io exception", Duration.LONG);
 					} catch (final DocumentValidationException e) {
-						activity.runOnUiThread(new Runnable() {
-						    public void run() {
-						        Toast.makeText(activity, e.getMessage(), Toast.LENGTH_LONG).show();
-						    }
-						});
-						return null;
+						App.showToast(activity, e.getMessage(), Duration.LONG);
+					} catch (Exception ex){
+						App.showToast(activity,"unknown error", Duration.LONG);
 					}
+					return null;
 				}
 
 				@Override
@@ -143,15 +127,9 @@ public class UpdateActivity extends Activity {
 						App.getDataProvider().saveOrUpdateCard(result);
 						TranskartWidget.updateAllWidgets(activity.getApplicationContext());
 						activity.setResult(RESULT_OK);
-						activity.runOnUiThread(new Runnable() {
-						    public void run() {
-								Toast.makeText(activity,
-										"Информация о карте '"
-												+ result.getCardName()
-												+ "' была успешно обновлена",
-										Toast.LENGTH_LONG).show();
-						    }
-						});
+						App.showToast(activity,"Информация о карте '"
+								+ result.getCardName()
+								+ "' была успешно обновлена", Duration.LONG);
 					} else {
 						activity.setResult(RESULT_CANCELED);
 					}
@@ -161,6 +139,7 @@ public class UpdateActivity extends Activity {
 			}.execute();
 		}
 	}
+	
 	//FIXME position
 	@Override
 	public void onAttachedToWindow() {

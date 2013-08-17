@@ -6,9 +6,7 @@
     <string name="card_name">Карта: %1$s</string>
     <string name="card_number">Номер карты: %1$s</string>
     <string name="card_balance">Баланс: %1$s руб</string>
-    <string name="title_activity_show_all">ShowAllActivity</string>
-    <string name="add_card">+</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_show_all_activity2">ShowAllActivity2</string>
+    <string name="title_activity_add_new_card">Добавление новой карты</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

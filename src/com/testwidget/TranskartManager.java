@@ -42,13 +42,11 @@ public class TranskartManager {
 		private static final String EVENT_VALIDATION = "__EVENTVALIDATION";
 
 		private final Document initialDocument;
-		private final String cardNumber;
 		private final String eventValidation;
 		private final String viewState;
 
-		public TranskartSession(Document initialDocument, String cardNumber) {
+		public TranskartSession(Document initialDocument) {
 			this.initialDocument = initialDocument;
-			this.cardNumber = cardNumber;
 			this.eventValidation = initialDocument.select("#"+EVENT_VALIDATION)
 					.val();
 			this.viewState = initialDocument.select("#"+VIEW_STATE).val();
@@ -71,9 +69,9 @@ public class TranskartManager {
 			return downloadImage;
 		}
 
-		public CardDescriptor getCardDescriptor(String captcha)
+		public CardDescriptor getCardDescriptor(String captcha, String cardNumber)
 				throws IOException, DocumentValidationException {
-			Document document = getCardDocument(captcha);
+			Document document = getCardDocument(captcha, cardNumber);
 			CardDescriptor cd = new CardDescriptor();
 
 			Element table = document.select("table").get(2).select("tbody").get(0);
@@ -131,7 +129,8 @@ public class TranskartManager {
 			return null;
 		}
 		
-		private Document getCardDocument(String captcha) throws IOException, DocumentValidationException {
+		private Document getCardDocument(String captcha, String cardNumber)
+				throws IOException, DocumentValidationException {
 			Document doc = Jsoup.connect(URL).data("checkcode", captcha)
 					.data("cardnum", cardNumber).data(VIEW_STATE, viewState)
 					.data(EVENT_VALIDATION, eventValidation).post();
@@ -172,11 +171,11 @@ public class TranskartManager {
 
 	}
 
-	public TranskartSession startSession(String cardNumber) throws IOException {
+	public TranskartSession startSession() throws IOException {
 		Document doc = Jsoup.connect(URL).get();
-		return new TranskartSession(doc, cardNumber);
+		return new TranskartSession(doc);
 	}
-
+	
 	public class DocumentValidationException extends Exception {
 		public DocumentValidationException(String message) {
 			super(message);

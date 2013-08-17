@@ -2,16 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-     >
+    android:orientation="vertical" >
 
     <EditText
         android:id="@+id/card_name_tf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        
-        android:hint="Имя карты"
+        android:hint="@string/new_card_name"
         android:inputType="textAutoComplete" />
 
     <EditText
@@ -19,10 +17,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Номер карты"
+        android:hint="@string/new_сard_number"
         android:inputType="number" >
     </EditText>
-
 
     <ProgressBar
         android:id="@+id/progressBar1"
@@ -31,13 +28,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone" />
-    
+
     <LinearLayout
         android:id="@+id/captcha_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/layout_border"
-        android:orientation="vertical" 
+        android:orientation="vertical"
         android:visibility="gone" >
 
         <ImageView
@@ -45,39 +42,40 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:src="@drawable/body"
-            />
- 		<include
-            layout="@layout/separator" />
+            android:src="@drawable/body" />
+
+        <include layout="@layout/separator" />
+
         <EditText
             android:id="@+id/captcha_text_view_"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="numberDecimal"
-            >
+            android:inputType="numberDecimal" >
         </EditText>
     </LinearLayout>
- 	
+
     <LinearLayout
+        style="@android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
-
-        <Button
+        <Button
             android:id="@+id/confirm_button"
+            style="@android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Сохранить" >
+            android:text="@string/save_new_card" >
         </Button>
 
         <Button
             android:id="@+id/back_button"
+            style="@android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Назад" >
+            android:text="@string/cancel" >
         </Button>
     </LinearLayout>
 

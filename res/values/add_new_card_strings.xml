@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="title_activity_add_new_card">Добавление новой карты</string>
+    <string name="new_card_name">Имя карты</string>
+    <string name="new_сard_number">Номер карты</string>
+    <string name="save_new_card">Сохранить карту</string>
+    <string name="cancel">Отмена</string>
+
+</resources>

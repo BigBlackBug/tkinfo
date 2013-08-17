@@ -181,6 +181,9 @@ public class AddNewCardActivity extends Activity {
 								"Карта '" + result.getCardName()
 										+ "' была успешно добавлена",
 								Duration.LONG);
+						setResult(RESULT_OK);
+						TranskartWidget.updateAllWidgets(getApplicationContext());
+						finish();
 					}else{
 						new CaptchaGrabber().execute();
 						captchaTextView.setText("");

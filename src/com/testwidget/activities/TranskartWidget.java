@@ -31,20 +31,27 @@ public class TranskartWidget extends AppWidgetProvider {
 		Log.i("widget", "amount of widgets " + appWidgetIds.length);
 
 		for (int widgetId : appWidgetIds) {
-			RemoteViews views = new RemoteViews(context.getPackageName(),
-					R.layout.widget_layout);
+			
 			DataProvider dataProvider = App.getDataProvider();
 			if (!dataProvider.isEmpty()) {
+				RemoteViews views = new RemoteViews(context.getPackageName(),
+						R.layout.widget_layout);
+				
 				CardDescriptor current = dataProvider.getCurrent();
 				fill(context,views, current);
+				
+				registerClickEvent(context, views, ACTION_UPDATE_CARD,R.id.update_button);
+				registerClickEvent(context, views, ACTION_NEXT_CARD, R.id.next_card_button);
+				registerClickEvent(context, views, ACTION_PREVIOUS_CARD, R.id.prev_card_button);
+				appWidgetManager.updateAppWidget(widgetId, views);
 			} else {
-				//FIXME add a floating layout
-				fillRaw(context,views, "Click to add a new card ", "", "", "");
+				RemoteViews views = new RemoteViews(context.getPackageName(),
+						R.layout.widget_empty_layout);
+				
+				appWidgetManager.updateAppWidget(widgetId, views);
 			}
 
-			registerClickEvent(context, views, ACTION_UPDATE_CARD,R.id.update_button);
-			registerClickEvent(context, views, ACTION_NEXT_CARD, R.id.next_card_button);
-			registerClickEvent(context, views, ACTION_PREVIOUS_CARD, R.id.prev_card_button);
+			
 //			registerClickEvent(context, views, ACTION_OPEN_DETAILS, R.id.clickable_layout);
 			
 			// registerClickEvent(context, views, "start_activity",
@@ -66,7 +73,7 @@ public class TranskartWidget extends AppWidgetProvider {
 			// 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 			// views.setOnClickPendingIntent(R.id.button2, pendingIntent2);
 
-			appWidgetManager.updateAppWidget(widgetId, views);
+			
 		}
 	}
 
@@ -109,11 +116,11 @@ public class TranskartWidget extends AppWidgetProvider {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		DataProvider dataProvider = App.getDataProvider();
-		RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
-				R.layout.widget_layout);
 		String action = intent.getAction();
 		Log.i("handler", "received action '" + action + "'");
 		try {
+			RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
+					R.layout.widget_layout);
 			if (action.equals(ACTION_NEXT_CARD)) {
 				CardDescriptor next = dataProvider.next();
 				fill(context,remoteViews, next);
@@ -133,15 +140,20 @@ public class TranskartWidget extends AppWidgetProvider {
 						dataProvider.getCurrent().getCardNumber());
 				context.startActivity(intent2);
 			}
-			setIntent(context, remoteViews, dataProvider.getCurrent());
+			setShowAllIntent(context, remoteViews, dataProvider.getCurrent());
+			repaintAllWidgets(context.getApplicationContext(), remoteViews);
 		} catch (NoDataException ex) {
 			Log.d("widget", "no data");
+			RemoteViews views = new RemoteViews(context.getPackageName(),
+					R.layout.widget_empty_layout);
+			setAddCardIntent(context, views);
+			repaintAllWidgets(context.getApplicationContext(), views);
 		}
-		repaintAllWidgets(context.getApplicationContext(), remoteViews);
+		
 		super.onReceive(context, intent);
 	}
 
-	private void setIntent(Context context, RemoteViews views,
+	private void setShowAllIntent(Context context, RemoteViews views,
 			CardDescriptor currentDescriptor) {
 		Intent startIntent = new Intent(context, ShowAllActivity.class);
 		startIntent.putExtra(IntentConstants.CARD_NUMBER, currentDescriptor.getCardNumber());
@@ -149,7 +161,15 @@ public class TranskartWidget extends AppWidgetProvider {
 		PendingIntent activity = PendingIntent.getActivity(context, 0,
 				startIntent, Intent.FLAG_ACTIVITY_NO_HISTORY);
 		views.setOnClickPendingIntent(R.id.clickable_layout, activity);
-
+	}
+	
+	private void setAddCardIntent(Context context, RemoteViews views) {
+		Intent startIntent = new Intent(context, AddNewCardActivity.class);
+//		startIntent.putExtra(IntentConstants.CARD_NUMBER, currentDescriptor.getCardNumber());
+//		Log.i("widget", "setting intent "+currentDescriptor.getCardNumber());
+		PendingIntent activity = PendingIntent.getActivity(context, 0,
+				startIntent, Intent.FLAG_ACTIVITY_NO_HISTORY);
+		views.setOnClickPendingIntent(R.id.new_card_text_view, activity);
 	}
 
 	private void fill(Context context,RemoteViews remoteViews, CardDescriptor descriptor) {

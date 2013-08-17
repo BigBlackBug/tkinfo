@@ -4,11 +4,11 @@
         android:id="@+id/add_new_card_item"
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
-        android:title="add"/>
+        android:title="@string/add_card"/>
     <item
         android:id="@+id/update_item"
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
-        android:title="update"/>
+        android:title="@string/update_card"/>
 
 </menu>

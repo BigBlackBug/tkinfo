@@ -112,12 +112,12 @@ public class ShowAllActivity extends Activity {
 			return true;
 		}
 		case R.id.update_item: {
-			Rect rect = getIntent().getSourceBounds();
+//			Rect rect = getIntent().getSourceBounds();
 			Intent intent = new Intent(this, UpdateActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			intent.putExtra(IntentConstants.LEFT_BORDER_INDEX, rect.left);
-			intent.putExtra(IntentConstants.BOTTOM_BORDER_INDEX, rect.bottom);
-			intent.putExtra(IntentConstants.WIDTH, rect.right - rect.left);
+//			intent.putExtra(IntentConstants.LEFT_BORDER_INDEX, rect.left);
+//			intent.putExtra(IntentConstants.BOTTOM_BORDER_INDEX, rect.bottom);
+//			intent.putExtra(IntentConstants.WIDTH, rect.right - rect.left);
 			intent.putExtra(IntentConstants.CARD_NUMBER,cardNumber);
 			startActivityForResult(intent, REQ_CODE);
 			return true;

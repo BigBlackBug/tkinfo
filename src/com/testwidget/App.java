@@ -2,6 +2,10 @@ package com.testwidget;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -53,6 +57,16 @@ public class App extends Application {
 				Toast.makeText(activity, text, duration.value).show();
 			}
 		});
+	}
+	
+	public static Drawable scaleDrawable(Resources resources, Drawable source,
+			double scaleX, double scaleY) {
+		Bitmap bitmap = ((BitmapDrawable) source).getBitmap();
+		int bw = bitmap.getWidth();
+		int bh = bitmap.getHeight();
+		return new BitmapDrawable(resources,
+				Bitmap.createScaledBitmap(bitmap, (int)(bw*scaleX),
+						(int)(bh*scaleY), true));
 	}
 
 }

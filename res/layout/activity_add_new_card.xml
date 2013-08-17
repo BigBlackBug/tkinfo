@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        
         android:hint="Имя карты"
         android:inputType="textAutoComplete" />
 
@@ -28,7 +29,8 @@
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:visibility="gone" />
     
     <LinearLayout
         android:id="@+id/captcha_layout"
@@ -42,6 +44,7 @@
             android:id="@+id/captcha_image_view_"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:src="@drawable/body"
             />
  		<include

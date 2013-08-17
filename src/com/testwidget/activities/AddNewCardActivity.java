@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,73 +28,109 @@ import com.testwidget.dataprovider.DataProvider.DuplicateCardException;
 public class AddNewCardActivity extends Activity {
 	private ProgressBar pb;
 	private LinearLayout captchaLayout;
+	private TextView captchaTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_new_card);
+		
+		try {
+			new CaptchaGrabber().execute();
+		} catch (Exception e) {
+			//TODO HANDLER
+			Log.e("activity", "blabla error", e);
+		}
 
 		pb = (ProgressBar) findViewById(R.id.progressBar1);
 		captchaLayout = (LinearLayout) findViewById(R.id.captcha_layout);
+		captchaTextView = (TextView) findViewById(R.id.captcha_text_view_);
 		
-		Button btn = (Button) findViewById(R.id.back_button);
+		Button backButton = (Button) findViewById(R.id.back_button);
 
-		btn.setOnClickListener(new View.OnClickListener() {
+		backButton.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
 		    	setResult(RESULT_CANCELED);
 		    	finish();
 		    }
 		});
-
-		new AsyncTask<Void, Void, Drawable>() {
-			private TranskartSession session;
-			private Throwable throwable;
-			private Activity activity =  AddNewCardActivity.this;
-			@Override
-			protected Drawable doInBackground(Void... params) {
-				try {
-					TranskartManager m = new TranskartManager(activity);
-					this.session = m.startSession();
-					return session.getCaptcha();
-					
-				} catch (Throwable t) {
-					this.throwable = t;
-					return null;
-				}
-			}
+		
+		ImageView captchaImageView = (ImageView) findViewById(R.id.captcha_image_view_);
+		captchaImageView.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
-			protected void onPostExecute(Drawable captcha) {
-				if(throwable == null){
-					runOnUiThread(new Runnable() {
-						public void run() {
-							pb.setVisibility(View.GONE);
-							captchaLayout.setVisibility(View.VISIBLE);
-						}
-					});
-					ImageView c = (ImageView) activity.findViewById(R.id.captcha_image_view_);
-					Log.i("update","width "+c.getWidth()+" height "+c.getHeight());;
-					c.setScaleType(ScaleType.FIT_CENTER);
-					c.setImageDrawable(captcha);
-					Button ok = (Button) activity.findViewById(R.id.confirm_button);
-					ok.setOnClickListener(new CardDescriptorUpdater(session,
-							activity));
-				}else{
-					App.showToast(activity, "SOME ERROR>I DONT'T KNOW WHAT HAPPENED", Duration.LONG);
+			public void onClick(View v) {
+				try {
+					new CaptchaGrabber().execute();
+				} catch (Exception e) {
+					//TODO HANDLER
+					Log.e("activity", "blabla error", e);
 				}
-			};
-		}.execute();
+			}
+		});
+
 	}
 	
-	private static class CardDescriptorUpdater implements View.OnClickListener {
+	private class CaptchaGrabber extends AsyncTask<Void, Void, Drawable> {
+		
+		private static final double SCALE_COEFFICIENT = 1.5;
+		
+		private TranskartSession session;
+		private Throwable throwable;
+		private Activity activity = AddNewCardActivity.this;
+
+		@Override
+		protected Drawable doInBackground(Void... params) {
+			try {
+				activity.runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						pb.setVisibility(View.VISIBLE);	
+						captchaLayout.setVisibility(View.GONE);
+					}
+				});
+				TranskartManager m = new TranskartManager(activity);
+				this.session = m.startSession();
+				return session.getCaptcha();
+				
+			} catch (Throwable t) {
+				this.throwable = t;
+				return null;
+			}
+		}
+		
+		@Override
+		protected void onPostExecute(Drawable captcha) {
+			if(throwable == null){
+				activity.runOnUiThread(new Runnable() {
+					public void run() {
+						pb.setVisibility(View.GONE);
+						captchaLayout.setVisibility(View.VISIBLE);
+					}
+				});
+				ImageView c = (ImageView) activity.findViewById(R.id.captcha_image_view_);
+				Drawable scaledCaptcha = App.scaleDrawable(
+						activity.getResources(), captcha, SCALE_COEFFICIENT,
+						SCALE_COEFFICIENT);
+				c.setImageDrawable(scaledCaptcha);
+				Button ok = (Button) activity.findViewById(R.id.confirm_button);
+				ok.setOnClickListener(new CardDescriptorUpdater(session));
+			}else{
+				App.showToast(activity, "SOME ERROR>I DONT'T KNOW WHAT HAPPENED", Duration.LONG);
+				Log.i("error","msg",throwable);
+			}
+		};
+	}
+	
+	private class CardDescriptorUpdater implements View.OnClickListener {
 
 		private TranskartSession s;
-		private Activity activity;
+		private Activity activity = AddNewCardActivity.this;
 
-		public CardDescriptorUpdater(TranskartSession s, Activity a) {
+		public CardDescriptorUpdater(TranskartSession s) {
 			this.s = s;
-			this.activity = a;
 		}
 
 		@Override
@@ -146,6 +181,9 @@ public class AddNewCardActivity extends Activity {
 								"Карта '" + result.getCardName()
 										+ "' была успешно добавлена",
 								Duration.LONG);
+					}else{
+						new CaptchaGrabber().execute();
+						captchaTextView.setText("");
 					}
 				}
 			}.execute();

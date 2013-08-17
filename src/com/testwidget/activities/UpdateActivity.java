@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,15 +17,14 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.testwidget.App;
+import com.testwidget.App.Duration;
 import com.testwidget.CardDescriptor;
 import com.testwidget.R;
 import com.testwidget.TranskartManager;
-import com.testwidget.App.Duration;
 import com.testwidget.TranskartManager.DocumentValidationException;
 import com.testwidget.TranskartManager.TranskartSession;
 
@@ -35,20 +36,20 @@ public class UpdateActivity extends Activity {
 		setContentView(new ProgressBar(this));
 		setFinishOnTouchOutside(true);
 		try {
-			new CaptchaHandler(this).execute();
+			new CaptchaGrabber().execute();
 		} catch (Exception e) {
 			Log.e("activity", "blabla error", e);
 		}
 	}
 	
-	private static class CaptchaHandler extends AsyncTask<Void, Void, Drawable>{
+	private class CaptchaGrabber extends AsyncTask<Void, Void, Drawable>{
+		
+		private static final double SCALE_COEFFICIENT = 1.5;
+		
 		private Throwable throwable;
 		private TranskartSession session;
-		private Activity activity;
+		private Activity activity = UpdateActivity.this;
 		
-		public CaptchaHandler(Activity activity) {
-			this.activity = activity;
-		}
 		@Override
 		protected Drawable doInBackground(
 				Void... params) {
@@ -69,13 +70,12 @@ public class UpdateActivity extends Activity {
 			if(throwable == null){
 				activity.setContentView(R.layout.update_layout);
 				ImageView c = (ImageView) activity.findViewById(R.id.captcha_image_view);
-				Log.i("update","width "+c.getWidth()+" height "+c.getHeight());;
-				c.setScaleType(ScaleType.FIT_CENTER);
-				c.setImageDrawable(captcha);
-				//TODO drawable must fill view
+				Drawable scaledCaptcha = App.scaleDrawable(
+						activity.getResources(), captcha, SCALE_COEFFICIENT,
+						SCALE_COEFFICIENT);
+				c.setImageDrawable(scaledCaptcha);
 				Button ok = (Button) activity.findViewById(R.id.button1);
-				ok.setOnClickListener(new CardDescriptorUpdater(session,
-						activity));
+				ok.setOnClickListener(new CardDescriptorUpdater(session));
 			}else{
 				App.showToast(activity, "SOME ERROR>I DONT'T KNOW WHAT HAPPENED", Duration.LONG);
 			}
@@ -83,14 +83,13 @@ public class UpdateActivity extends Activity {
 		
 	}
 
-	private static class CardDescriptorUpdater implements View.OnClickListener {
+	private class CardDescriptorUpdater implements View.OnClickListener {
 
-		private TranskartSession s;
-		private Activity activity;
+		private TranskartSession session;
+		private Activity activity = UpdateActivity.this;
 
-		public CardDescriptorUpdater(TranskartSession s, Activity a) {
-			this.s = s;
-			this.activity = a;
+		public CardDescriptorUpdater(TranskartSession session) {
+			this.session = session;
 		}
 
 		@Override
@@ -104,7 +103,7 @@ public class UpdateActivity extends Activity {
 					try {
 						String cardNumber = activity.getIntent()
 								.getStringExtra(IntentConstants.CARD_NUMBER);
-						CardDescriptor cardDescriptor = s
+						CardDescriptor cardDescriptor = session
 								.getCardDescriptor(captchaValue
 										.toString(), cardNumber);
 						return cardDescriptor;
@@ -140,24 +139,4 @@ public class UpdateActivity extends Activity {
 		}
 	}
 	
-	//FIXME position
-	@Override
-	public void onAttachedToWindow() {
-		super.onAttachedToWindow();
-		Log.i("activity", "onAtttachedToWindow");
-		View view = getWindow().getDecorView();
-		WindowManager.LayoutParams lp = (WindowManager.LayoutParams) view
-				.getLayoutParams();
-		lp.gravity = Gravity.LEFT | Gravity.TOP;
-		Intent intent = getIntent();
-		int left = intent.getIntExtra(IntentConstants.LEFT_BORDER_INDEX, 0);
-		int bot = intent.getIntExtra(IntentConstants.BOTTOM_BORDER_INDEX, 0);
-		int width = intent.getIntExtra(IntentConstants.WIDTH, 0);
-		Log.i("activity", "received left " + left + "bot " + bot + "width "
-				+ width);
-		lp.x = left;
-		lp.y = bot;
-		getWindowManager().updateViewLayout(view, lp);
-	}
-
 }

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="version_name">0.9 beta</string>
+    
     <string name="app_name">Transkart Widget</string>
     <string name="last_updated">Последнее обновление: %1$s</string>
     <string name="card_name">Карта: %1$s</string>

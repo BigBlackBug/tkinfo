@@ -19,20 +19,21 @@ public final class R {
     }
     public static final class drawable {
         public static final int add_card_icon=0x7f020000;
-        public static final int body=0x7f020001;
-        public static final int down_arrow=0x7f020002;
-        public static final int down_arrow_pressed=0x7f020003;
-        public static final int layout_border=0x7f020004;
-        public static final int logo=0x7f020005;
-        public static final int navigation_refresh=0x7f020006;
-        public static final int next_button_drawable=0x7f020007;
-        public static final int prev_button_drawable=0x7f020008;
-        public static final int refresh=0x7f020009;
-        public static final int refresh_pressed=0x7f02000a;
-        public static final int up_arrow=0x7f02000b;
-        public static final int up_arrow_pressed=0x7f02000c;
-        public static final int update_button_drawable=0x7f02000d;
-        public static final int widget_bg=0x7f02000e;
+        public static final int add_card_icon_nfc=0x7f020001;
+        public static final int body=0x7f020002;
+        public static final int down_arrow=0x7f020003;
+        public static final int down_arrow_pressed=0x7f020004;
+        public static final int layout_border=0x7f020005;
+        public static final int logo=0x7f020006;
+        public static final int navigation_refresh=0x7f020007;
+        public static final int next_button_drawable=0x7f020008;
+        public static final int prev_button_drawable=0x7f020009;
+        public static final int refresh=0x7f02000a;
+        public static final int refresh_pressed=0x7f02000b;
+        public static final int up_arrow=0x7f02000c;
+        public static final int up_arrow_pressed=0x7f02000d;
+        public static final int update_button_drawable=0x7f02000e;
+        public static final int widget_bg=0x7f02000f;
     }
     public static final class id {
         public static final int add_new_card_item=0x7f0a0028;
@@ -94,15 +95,15 @@ public final class R {
     }
     public static final class string {
         public static final int add_card=0x7f050005;
-        public static final int app_name=0x7f050023;
+        public static final int app_name=0x7f050024;
         public static final int cancel=0x7f050004;
         public static final int card_adding_success=0x7f05000b;
         public static final int card_already_saved=0x7f05000c;
-        public static final int card_balance=0x7f050027;
+        public static final int card_balance=0x7f050028;
         public static final int card_balance_string=0x7f050017;
-        public static final int card_name=0x7f050025;
+        public static final int card_name=0x7f050026;
         public static final int card_name_string=0x7f050016;
-        public static final int card_number=0x7f050026;
+        public static final int card_number=0x7f050027;
         public static final int card_number_string=0x7f050018;
         public static final int card_type_string=0x7f050019;
         public static final int card_updating_success=0x7f05000e;
@@ -115,7 +116,7 @@ public final class R {
         public static final int incorrect_captcha=0x7f050011;
         public static final int internal_app_error=0x7f05000a;
         public static final int last_activated_string=0x7f05001a;
-        public static final int last_updated=0x7f050024;
+        public static final int last_updated=0x7f050025;
         public static final int last_updated_string=0x7f050022;
         public static final int last_usage_info_tf_string=0x7f050014;
         public static final int last_used_charge_type_string=0x7f05001f;
@@ -133,6 +134,7 @@ public final class R {
         public static final int title_activity_show_info=0x7f050012;
         public static final int update_card=0x7f050006;
         public static final int valid_until_string=0x7f05001b;
+        public static final int version_name=0x7f050023;
     }
     public static final class style {
         /**  Animations for a non-full-screen window or activity. 

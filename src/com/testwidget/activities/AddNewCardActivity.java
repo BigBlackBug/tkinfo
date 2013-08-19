@@ -3,6 +3,7 @@ package com.testwidget.activities;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,23 +24,30 @@ import com.testwidget.R;
 import com.testwidget.TranskartManager;
 import com.testwidget.TranskartManager.DocumentValidationException;
 import com.testwidget.TranskartManager.TranskartSession;
+import com.testwidget.dataprovider.DataProvider.CardSavingException;
 import com.testwidget.dataprovider.DataProvider.DuplicateCardException;
 
 public class AddNewCardActivity extends Activity {
+	private static final String TAG = "add_new_card_activity";
+	
 	private ProgressBar pb;
 	private LinearLayout captchaLayout;
 	private TextView captchaTextView;
+	private Resources resources;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_new_card);
+		this.resources = getResources();
 		
 		try {
-			new CaptchaGrabber().execute();
+			new CaptchaFetcher().execute();
 		} catch (Exception e) {
-			//TODO HANDLER
-			Log.e("activity", "blabla error", e);
+			App.showToast(this, resources.getString(R.string.internal_app_error),
+					Duration.LONG);
+			Log.e(TAG, "error fetching captcha", e);
+			finish();
 		}
 
 		pb = (ProgressBar) findViewById(R.id.progressBar1);
@@ -62,18 +70,22 @@ public class AddNewCardActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				try {
-					new CaptchaGrabber().execute();
+					new CaptchaFetcher().execute();
 				} catch (Exception e) {
-					//TODO HANDLER
-					Log.e("activity", "blabla error", e);
+					App.showToast(AddNewCardActivity.this,
+							resources.getString(R.string.internal_app_error),
+							Duration.LONG);
+					Log.e(TAG, "error fetching captcha", e);
+					finish();
 				}
 			}
 		});
 
 	}
 	
-	private class CaptchaGrabber extends AsyncTask<Void, Void, Drawable> {
+	private class CaptchaFetcher extends AsyncTask<Void, Void, Drawable> {
 		
+		private static final int ACTIVITY_CLOSE_DELAY = 1500;
 		private static final double SCALE_COEFFICIENT = 1.5;
 		
 		private TranskartSession session;
@@ -117,20 +129,31 @@ public class AddNewCardActivity extends Activity {
 						SCALE_COEFFICIENT);
 				c.setImageDrawable(scaledCaptcha);
 				Button ok = (Button) activity.findViewById(R.id.confirm_button);
-				ok.setOnClickListener(new CardDescriptorUpdater(session));
+				ok.setOnClickListener(new CardDescriptorSaver(session));
 			}else{
-				App.showToast(activity, "SOME ERROR>I DONT'T KNOW WHAT HAPPENED", Duration.LONG);
-				Log.i("error","msg",throwable);
+				if(throwable instanceof IOException){
+					App.showToast(
+							activity,
+							resources.getString(R.string.network_connection_error),
+							Duration.LONG);
+				}else{
+					App.showToast(activity,
+							resources.getString(R.string.internal_app_error),
+							Duration.LONG);	
+					Log.e(TAG, "internal app error", throwable);
+				}
+				App.closeAfterDelay(activity, ACTIVITY_CLOSE_DELAY);
+				Log.i(TAG, "error fetching captcha", throwable);
 			}
 		};
 	}
 	
-	private class CardDescriptorUpdater implements View.OnClickListener {
+	private class CardDescriptorSaver implements View.OnClickListener {
 
 		private TranskartSession s;
 		private Activity activity = AddNewCardActivity.this;
 
-		public CardDescriptorUpdater(TranskartSession s) {
+		public CardDescriptorSaver(TranskartSession s) {
 			this.s = s;
 		}
 
@@ -146,7 +169,9 @@ public class AddNewCardActivity extends Activity {
 						TextView cardNumberTF = (TextView) activity.findViewById(R.id.card_number_tf);
 						String cardNumber = cardNumberTF.getText().toString();
 						if(cardNumber.trim().isEmpty()){
-							App.showToast(activity, "empty card number", Duration.LONG);
+							App.showToast(activity, resources
+									.getString(R.string.empty_card_number_field),
+									Duration.LONG);
 						}
 						CardDescriptor cardDescriptor = s
 								.getCardDescriptor(captchaValue
@@ -154,19 +179,24 @@ public class AddNewCardActivity extends Activity {
 						TextView cardNameTF = (TextView) activity.findViewById(R.id.card_name_tf);
 						String cardName = cardNameTF.getText().toString();
 						if(cardName.trim().isEmpty()){
-							App.showToast(activity, "empty name", Duration.LONG);
+							App.showToast(activity, resources
+									.getString(R.string.empty_card_name_field),
+									Duration.LONG);
 						}
 						cardDescriptor.setCardName(cardName);
 						return cardDescriptor;
 					} catch (IOException e) {
-						Log.e("add card", "",e);
-						App.showToast(activity, "io error", Duration.LONG);
+						App.showToast(
+								activity, 
+								resources.getString(R.string.network_connection_error),
+								Duration.LONG);
 					} catch (DocumentValidationException e) {
-						Log.e("add card", "",e);
-						App.showToast(activity,e.getMessage(), Duration.LONG);
+						App.showToast(activity, e.getMessage(), Duration.LONG);
 					} catch (Exception ex){
-						Log.e("add card", "",ex);
-						App.showToast(activity,"unknown error", Duration.LONG);
+						Log.e(TAG, "",ex);
+						App.showToast(activity,
+								resources.getString(R.string.internal_app_error),
+								Duration.LONG);
 					}
 					return null;
 				}
@@ -174,22 +204,27 @@ public class AddNewCardActivity extends Activity {
 				@Override
 				protected void onPostExecute(final CardDescriptor result) {
 					if (result != null) {
-						try{
+						try {
 							App.getDataProvider().saveCard(result);
-						}catch(DuplicateCardException dex){
-							App.showToast(activity, "dup card number", Duration.LONG);
+							App.showToast(activity, resources.getString(
+									R.string.card_adding_success,
+									result.getCardNumber()), Duration.LONG);
+						} catch (DuplicateCardException dex) {
+							App.showToast(activity,
+									resources.getString(
+											R.string.card_already_saved,
+											result.getCardNumber()), Duration.LONG);
 							return;
+						} catch (CardSavingException ex) {
+							App.showToast(activity, resources.getString(
+									R.string.error_writing_card_to_disk,
+									result.getCardNumber()), Duration.LONG);
 						}
-						TranskartWidget.updateAllWidgets(activity.getApplicationContext());
-						App.showToast(activity,
-								"Карта'" + result.getCardName()
-										+ "' была успешно добавлена",
-								Duration.LONG);
 						setResult(RESULT_OK);
 						TranskartWidget.updateAllWidgets(getApplicationContext());
 						finish();
 					}else{
-						new CaptchaGrabber().execute();
+						new CaptchaFetcher().execute();
 						captchaTextView.setText("");
 					}
 				}

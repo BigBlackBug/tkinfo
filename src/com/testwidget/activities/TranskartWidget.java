@@ -118,8 +118,9 @@ public class TranskartWidget extends AppWidgetProvider {
 		DataProvider dataProvider = App.getDataProvider();
 		String action = intent.getAction();
 		Log.i("handler", "received action '" + action + "'");
+		RemoteViews remoteViews;
 		try {
-			RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
+			remoteViews = new RemoteViews(context.getPackageName(),
 					R.layout.widget_layout);
 			if (action.equals(ACTION_NEXT_CARD)) {
 				CardDescriptor next = dataProvider.next();
@@ -141,15 +142,15 @@ public class TranskartWidget extends AppWidgetProvider {
 				context.startActivity(intent2);
 			}
 			setShowAllIntent(context, remoteViews, dataProvider.getCurrent());
-			repaintAllWidgets(context.getApplicationContext(), remoteViews);
+			
 		} catch (NoDataException ex) {
 			Log.d("widget", "no data");
-			RemoteViews views = new RemoteViews(context.getPackageName(),
+			remoteViews = new RemoteViews(context.getPackageName(),
 					R.layout.widget_empty_layout);
-			setAddCardIntent(context, views);
-			repaintAllWidgets(context.getApplicationContext(), views);
+			setAddCardIntent(context, remoteViews);
 		}
 		
+		repaintAllWidgets(context.getApplicationContext(), remoteViews);
 		super.onReceive(context, intent);
 	}
 

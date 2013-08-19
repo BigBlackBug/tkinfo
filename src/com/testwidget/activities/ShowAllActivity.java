@@ -20,6 +20,8 @@ import com.testwidget.dataprovider.DataProvider;
 
 public class ShowAllActivity extends Activity {
 
+	private static final String TAG = "show_all_activity";
+
 	private static final int REQ_CODE = 1001;
 	
 	private String cardNumber;
@@ -32,7 +34,7 @@ public class ShowAllActivity extends Activity {
 		
 		Intent intent = getIntent();
 		cardNumber = intent.getStringExtra(IntentConstants.CARD_NUMBER);
-		Log.i("SHOWALL", "received "+cardNumber);
+		Log.i(TAG, "received "+cardNumber);
 		
 		CardDescriptor cd = dp.getByNumber(cardNumber);
 		prepareTextViews(cd);
@@ -42,7 +44,7 @@ public class ShowAllActivity extends Activity {
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		cardNumber = intent.getStringExtra(IntentConstants.CARD_NUMBER);
-		Log.i("SHOWALL", "onnewintent received "+cardNumber);
+		Log.i(TAG, "onnewintent received "+cardNumber);
 		
 		CardDescriptor cd = dp.getByNumber(cardNumber);
 		prepareTextViews(cd);
@@ -111,7 +113,6 @@ public class ShowAllActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.i("menu click", item.getItemId() + "");
 		switch (item.getItemId()) {
 		case R.id.add_new_card_item: {
 			Intent intent = new Intent(this, AddNewCardActivity.class);
@@ -138,11 +139,11 @@ public class ShowAllActivity extends Activity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.i("show all", "returned");
+		Log.i(TAG, "returned");
 		if(requestCode == REQ_CODE){
-			Log.i("show all", "reqcode OK "+resultCode);
+			Log.i(TAG, "reqcode OK "+resultCode);
 			if(resultCode == RESULT_OK){
-				Log.i("show all", "res code OK");
+				Log.i(TAG, "res code OK");
 				CardDescriptor cd = dp.getByNumber(cardNumber);
 				prepareTextViews(cd);
 			}

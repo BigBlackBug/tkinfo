@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,22 +24,32 @@ import com.testwidget.R;
 import com.testwidget.TranskartManager;
 import com.testwidget.TranskartManager.DocumentValidationException;
 import com.testwidget.TranskartManager.TranskartSession;
+import com.testwidget.dataprovider.DataProvider.CardSavingException;
 
 public class UpdateActivity extends Activity {
+
+	private static final String TAG = "update_activity";
+	private Resources resources;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(new ProgressBar(this));
 		setFinishOnTouchOutside(true);
+		this.resources = getResources();
 		try {
-			new CaptchaGrabber().execute();
+			new CaptchaFetcher().execute();
 		} catch (Exception e) {
-			Log.e("activity", "blabla error", e);
+			App.showToast(this, 
+					getString(R.string.internal_app_error),
+					Duration.LONG);
+			Log.e(TAG, "internal app error", e);
+			setResult(RESULT_CANCELED);
+			finish();
 		}
 	}
 	
-	private class CaptchaGrabber extends AsyncTask<Void, Void, Drawable>{
+	private class CaptchaFetcher extends AsyncTask<Void, Void, Drawable>{
 		
 		private static final double SCALE_COEFFICIENT = 1.5;
 		
@@ -53,7 +64,6 @@ public class UpdateActivity extends Activity {
 				TranskartManager manager = new TranskartManager(activity);
 				this.session = manager.startSession();
 				return session.getCaptcha();
-				
 			} catch (Throwable t) {
 				this.throwable = t;
 				return null;
@@ -76,7 +86,19 @@ public class UpdateActivity extends Activity {
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT , 0);
 			} else {
-				App.showToast(activity, "SOME ERROR>I DONT'T KNOW WHAT HAPPENED", Duration.LONG);
+				if(throwable instanceof IOException){
+					App.showToast(
+							activity,
+							resources.getString(R.string.network_connection_error),
+							Duration.LONG);
+				}else{
+					App.showToast(activity,
+							resources.getString(R.string.internal_app_error),
+							Duration.LONG);	
+					Log.e(TAG, "internal app error", throwable);
+				}
+				setResult(RESULT_CANCELED);
+				finish();
 			}
 		}
 		
@@ -107,11 +129,17 @@ public class UpdateActivity extends Activity {
 										.toString(), cardNumber);
 						return cardDescriptor;
 					} catch (IOException e) {
-						App.showToast(activity, "io exception", Duration.LONG);
+						App.showToast(
+								activity, 
+								resources.getString(R.string.network_connection_error),
+								Duration.LONG);
 					} catch (final DocumentValidationException e) {
 						App.showToast(activity, e.getMessage(), Duration.LONG);
 					} catch (Exception ex){
-						App.showToast(activity,"unknown error", Duration.LONG);
+						Log.e(TAG, "",ex);
+						App.showToast(activity,
+								resources.getString(R.string.internal_app_error),
+								Duration.LONG);
 					}
 					return null;
 				}
@@ -122,12 +150,18 @@ public class UpdateActivity extends Activity {
 						CardDescriptor old = App.getDataProvider().getByNumber(
 								result.getCardNumber());
 						result.setCardName(old.getCardName());
-						App.getDataProvider().saveOrUpdateCard(result);
+						try {
+							App.getDataProvider().saveOrUpdateCard(result);
+							App.showToast(activity, resources.getString(
+									R.string.card_updating_success,
+									result.getCardNumber()), Duration.LONG);
+						} catch (CardSavingException ex) {
+							App.showToast(activity, resources.getString(
+									R.string.error_writing_card_to_disk,
+									result.getCardNumber()), Duration.LONG);
+						}
 						TranskartWidget.updateAllWidgets(activity.getApplicationContext());
 						activity.setResult(RESULT_OK);
-						App.showToast(activity,"Информация о карте '"
-								+ result.getCardName()
-								+ "' была успешно обновлена", Duration.LONG);
 					} else {
 						activity.setResult(RESULT_CANCELED);
 					}

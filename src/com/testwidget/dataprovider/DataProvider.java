@@ -13,6 +13,7 @@ import android.util.Log;
 
 public class DataProvider {
 
+	private static final String TAG = "data_provider";
 	private static final String EXTENTION = ".card";
 
 	private TraversableMap<String, CardDescriptor> data;
@@ -21,7 +22,7 @@ public class DataProvider {
 	public DataProvider(Context context) {
 		this.data = new TraversableMap<String, CardDescriptor>();
 		cardDirectory = context.getFilesDir();
-		Log.i("provider", cardDirectory.getAbsolutePath());
+		Log.i(TAG, cardDirectory.getAbsolutePath());
 		loadAllCardDescriptors(cardDirectory);
 	}
 
@@ -30,13 +31,13 @@ public class DataProvider {
 			if (file.getName().endsWith(EXTENTION)) {
 				try {
 					CardDescriptor cardInfo = loadCardDescriptor(file);
-					Log.i("provider", "found "+cardInfo.getCardNumber());
+					Log.i(TAG, "found "+cardInfo.getCardNumber());
 					data.put(cardInfo.getCardNumber(), cardInfo);
 				} catch (CardLoadingException e) {
-					Log.i("dp", "error loading card "+file.getName());
+					Log.i(TAG, "error loading card "+file.getName());
 					// TODO handler
 				} catch (IOException e) {
-					Log.i("dp", " io error loading card "+file.getName());
+					Log.i(TAG, " io error loading card "+file.getName());
 					// TODO handler
 				}
 			}
@@ -80,20 +81,21 @@ public class DataProvider {
 		return cardDirectory.getAbsolutePath() + "/" + cardNumber + EXTENTION;
 	}
 
-	public void saveOrUpdateCard(CardDescriptor descriptor) {
+	public void saveOrUpdateCard(CardDescriptor descriptor) throws CardSavingException{
 		data.put(descriptor.getCardNumber(), descriptor);
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(
 					new FileOutputStream(getNewCardFile(descriptor.getCardNumber())));
-			Log.i("widget", "saving file under ("
+			Log.i(TAG, "saving file under ("
 					+ getNewCardFile(descriptor.getCardNumber()) + ")");
 			oos.writeObject(descriptor);
 		} catch (Exception ex) {
-			// TODO handler. unable to persist blablabla
+			throw new CardSavingException();
 		}
 	}
 	
-	public void saveCard(CardDescriptor descriptor) throws DuplicateCardException{
+	public void saveCard(CardDescriptor descriptor) throws DuplicateCardException,
+			CardSavingException {
 		if(data.containsKey(descriptor.getCardNumber())){
 			throw new DuplicateCardException();
 		}
@@ -108,7 +110,7 @@ public class DataProvider {
 			Object cardInfo = in.readObject();
 			return (CardDescriptor) cardInfo;
 		} catch (Exception e) {
-			Log.i("dp", "error loading card ",e);
+			Log.i(TAG, "error loading card ",e);
 			throw new CardLoadingException();
 		}
 	}
@@ -122,6 +124,10 @@ public class DataProvider {
 	}
 	
 	public static class DuplicateCardException extends RuntimeException {
+
+	}
+	
+	public static class CardSavingException extends RuntimeException {
 
 	}
 }

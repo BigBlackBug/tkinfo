@@ -2,18 +2,22 @@ package com.testwidget;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.testwidget.dataprovider.DataProvider;
 //3894706279 2938811773
 public class App extends Application {
+	
 	private static DataProvider dataProvider;
-
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -65,8 +69,20 @@ public class App extends Application {
 		int bw = bitmap.getWidth();
 		int bh = bitmap.getHeight();
 		return new BitmapDrawable(resources,
-				Bitmap.createScaledBitmap(bitmap, (int)(bw*scaleX),
+				Bitmap.createScaledBitmap(bitmap, 
+						(int)(bw*scaleX),
 						(int)(bh*scaleY), true));
+	}
+
+	public static void closeAfterDelay(final Activity activity, int delay) {
+		new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				activity.finish();
+
+			}
+		}, delay);
 	}
 
 }

@@ -17,6 +17,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
@@ -27,10 +28,14 @@ public class TranskartManager {
 
 	private static final String URL = "http://81.23.146.8/default.aspx";
 	private static final String IMAGE_FORMAT = ".png";
+	private static final String TAG = "transkart_manager";
+	
 	private Context context;
+	private Resources resources;
 
 	public TranskartManager(Context context) {
 		this.context = context;
+		this.resources = context.getResources();
 	}
 
 	public class TranskartSession {
@@ -74,36 +79,41 @@ public class TranskartManager {
 			CardDescriptor cd = new CardDescriptor();
 
 			Element table = document.select("table").get(2).select("tbody").get(0);
-			
-			String cardType = getValueOfRow(table, 0);
-			String balance = getValueOfRow(table, 2);
-			String lastUsedDateString = getValueOfRow(table, 3);
-			String transportNumber = getValueOfRow(table, 4);
-			transportNumber = transportNumber.substring(0,transportNumber.length()-8);
-			String transportType = getValueOfRow(table, 5);
-			String operationType = getValueOfRow(table, 6);
-			String rechargeDateString = getValueOfRow(table, 7);
-			String rechargeLocation = getValueOfRow(table, 8);
-			String rechargeAmount = getValueOfRow(table, 9);
-			
-			cd.setCardType(cardType);
-			cd.setCardNumber(cardNumber);
-			
-			cd.setBalance(getMoneyValue(balance));
-			
-			cd.setActivationDate(parseDate(rechargeDateString));
-			LastUsageInfo lastUsageInfo = new LastUsageInfo();
-			lastUsageInfo.setOperationType(operationType);
-			lastUsageInfo.setDate(parseDate(lastUsedDateString));
-			lastUsageInfo.setTransportNumber(transportNumber);
-			lastUsageInfo.setTransportType(transportType);
-			cd.setLastUsageInfo(lastUsageInfo);
-			
-			RechargeInfo rechargeInfo = new RechargeInfo();
-			rechargeInfo.setRechargeAmount(getMoneyValue(rechargeAmount));
-			rechargeInfo.setRechargeDate(parseDate(rechargeDateString));		
-			rechargeInfo.setRechargeLocation(rechargeLocation);
-			cd.setRechargeInfo(rechargeInfo);
+			try {
+				String cardType = getValueOfRow(table, 0);
+				String balance = getValueOfRow(table, 2);
+				String lastUsedDateString = getValueOfRow(table, 3);
+				String transportNumber = getValueOfRow(table, 4);
+				transportNumber = transportNumber.substring(0, transportNumber.length() - 8);
+				String transportType = getValueOfRow(table, 5);
+				String operationType = getValueOfRow(table, 6);
+				String rechargeDateString = getValueOfRow(table, 7);
+				String rechargeLocation = getValueOfRow(table, 8);
+				String rechargeAmount = getValueOfRow(table, 9);
+
+				cd.setCardType(cardType);
+				cd.setCardNumber(cardNumber);
+				
+				cd.setBalance(getMoneyValue(balance));
+				
+				cd.setActivationDate(parseDate(rechargeDateString));
+				LastUsageInfo lastUsageInfo = new LastUsageInfo();
+				lastUsageInfo.setOperationType(operationType);
+				lastUsageInfo.setDate(parseDate(lastUsedDateString));
+				lastUsageInfo.setTransportNumber(transportNumber);
+				lastUsageInfo.setTransportType(transportType);
+				cd.setLastUsageInfo(lastUsageInfo);
+				
+				RechargeInfo rechargeInfo = new RechargeInfo();
+				rechargeInfo.setRechargeAmount(getMoneyValue(rechargeAmount));
+				rechargeInfo.setRechargeDate(parseDate(rechargeDateString));		
+				rechargeInfo.setRechargeLocation(rechargeLocation);
+				cd.setRechargeInfo(rechargeInfo);
+				
+			} catch (Exception ex) {
+				throw new DocumentValidationException(resources.getString(
+						R.string.error_fetching_data, cardNumber));
+			}
 			
 			cd.setLastUpdated(new Date());
 			return cd;
@@ -122,8 +132,8 @@ public class TranskartManager {
 			try {
 				return formatter.parse(dateString);
 			} catch (ParseException e) {
-				Log.d("parser","SUDDENLY PARSING FAILED");
-				// TODO never gonna happen
+				Log.d(TAG,"SUDDENLY PARSING FAILED");
+				// never gonna happen
 			}
 			return null;
 		}
@@ -133,7 +143,7 @@ public class TranskartManager {
 			Document doc = Jsoup.connect(URL).data("checkcode", captcha)
 					.data("cardnum", cardNumber).data(VIEW_STATE, viewState)
 					.data(EVENT_VALIDATION, eventValidation).post();
-			validateDocument(doc);
+			validateDocument(doc, cardNumber);
 
 			return doc;
 		}
@@ -155,15 +165,18 @@ public class TranskartManager {
 			return captchaFile;
 		}
 
-		private void validateDocument(Document doc) throws DocumentValidationException {
+		private void validateDocument(Document doc, String cardNumber)
+				throws DocumentValidationException {
 			Elements errors = doc.select(".ErrorMessage");
 			if (!errors.isEmpty()) {
 				// throw new RuntimeException(errors.html());
-				throw new DocumentValidationException("Incorrect card number");
+				throw new DocumentValidationException(resources.getString(
+						R.string.no_such_card, cardNumber));
 			}
 			Elements error2 = doc.select("#CustomValidator1");
 			if (!error2.isEmpty()) {
-				throw new DocumentValidationException("Incorrect captcha value");
+				throw new DocumentValidationException(
+						resources.getString(R.string.incorrect_captcha));
 				// throw new RuntimeException(error2.select("font").html());
 			}
 		}
@@ -179,10 +192,6 @@ public class TranskartManager {
 		public DocumentValidationException(String message) {
 			super(message);
 		}
-
-		public DocumentValidationException() {
-			super();
-		}
 	}
-
+	
 }

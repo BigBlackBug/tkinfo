@@ -113,7 +113,7 @@ public final class R {
         public static final int last_used_transport_number_string=0x7f050013;
         public static final int last_used_transport_type_string=0x7f050012;
         public static final int new_card_name=0x7f050001;
-        public static final int new_сard_number=0x7f050002;
+        public static final int new_card_number=0x7f050002;
         public static final int recharge_amount_string=0x7f050016;
         public static final int recharge_info_tf_string=0x7f05000a;
         public static final int recharge_location_string=0x7f050015;

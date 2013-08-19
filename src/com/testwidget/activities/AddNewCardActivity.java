@@ -159,10 +159,13 @@ public class AddNewCardActivity extends Activity {
 						cardDescriptor.setCardName(cardName);
 						return cardDescriptor;
 					} catch (IOException e) {
+						Log.e("add card", "",e);
 						App.showToast(activity, "io error", Duration.LONG);
 					} catch (DocumentValidationException e) {
+						Log.e("add card", "",e);
 						App.showToast(activity,e.getMessage(), Duration.LONG);
 					} catch (Exception ex){
+						Log.e("add card", "",ex);
 						App.showToast(activity,"unknown error", Duration.LONG);
 					}
 					return null;
@@ -179,7 +182,7 @@ public class AddNewCardActivity extends Activity {
 						}
 						TranskartWidget.updateAllWidgets(activity.getApplicationContext());
 						App.showToast(activity,
-								"Карта '" + result.getCardName()
+								"Карта'" + result.getCardName()
 										+ "' была успешно добавлена",
 								Duration.LONG);
 						setResult(RESULT_OK);

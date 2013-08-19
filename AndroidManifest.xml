@@ -66,8 +66,7 @@
             android:name="com.testwidget.activities.ShowAllActivity"
             android:theme="@android:style/Theme.Holo.Light" 
             android:label="@string/title_activity_show_info"
-            android:finishOnTaskLaunch="true"
-            android:noHistory="true"
+            android:launchMode="singleTask"
            >
         </activity>
         <activity

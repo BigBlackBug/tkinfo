@@ -38,6 +38,16 @@ public class ShowAllActivity extends Activity {
 		prepareTextViews(cd);
 	}
 
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		cardNumber = intent.getStringExtra(IntentConstants.CARD_NUMBER);
+		Log.i("SHOWALL", "onnewintent received "+cardNumber);
+		
+		CardDescriptor cd = dp.getByNumber(cardNumber);
+		prepareTextViews(cd);
+		
+	}
 	private void prepareTextViews(CardDescriptor cd) {
 		Resources resources = getResources();
 		setDescription(R.id.card_name_block,
@@ -105,6 +115,7 @@ public class ShowAllActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.add_new_card_item: {
 			Intent intent = new Intent(this, AddNewCardActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(intent);
 			return true;
 		}

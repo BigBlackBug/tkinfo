@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scrollView1"
+    android:id="@+id/main_scroll_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:descendantFocusability="beforeDescendants" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,55 +14,117 @@
         <TextView
             android:id="@+id/general_info_tf"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:gravity="center_horizontal|center_vertical"
             android:inputType="none"
             android:text="@string/general_info_tf_string"
             android:textSize="12sp" />
 
-        <include
+        <!--
+            <include
             android:id="@+id/card_name_block"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             layout="@layout/card_descriptor_item" />
 
+        -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:weightSum="1" >
+
+            <TextView
+                android:id="@+id/__name_description_tf"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.5"
+                android:gravity="right"
+                android:inputType="none"
+                android:paddingRight="5dp"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/__name_value_tf"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.45"
+                android:gravity="left"
+                android:inputType="none"
+                android:paddingLeft="5dp"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/___name_et"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.45"
+                android:gravity="left"
+                android:imeActionId="@integer/edit_text_action_code"
+                android:imeActionLabel="L"
+                android:imeOptions="actionDone"
+                android:inputType="none"
+                android:paddingLeft="5dp"
+                android:singleLine="true"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/edit_card_name_image_view"
+                android:clickable="true"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.05"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/edit_icon" />
+        </LinearLayout>
+
         <include
             android:id="@+id/card_balance_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             layout="@layout/card_descriptor_item" />
 
         <include
             android:id="@+id/card_number_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             layout="@layout/card_descriptor_item" />
 
         <include
             android:id="@+id/card_type_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             layout="@layout/card_descriptor_item" />
 
         <include
             android:id="@+id/last_activated_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             layout="@layout/card_descriptor_item" />
 
         <include
             android:id="@+id/valid_until_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             layout="@layout/card_descriptor_item" />
 
-        <include
-            layout="@layout/separator" />
+        <include layout="@layout/separator" />
 
         <TextView
             android:id="@+id/last_usage_info_tf"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:gravity="center_horizontal|center_vertical"
             android:inputType="none"
             android:text="@string/last_usage_info_tf_string"
@@ -69,34 +133,38 @@
         <include
             android:id="@+id/last_used_date_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             layout="@layout/card_descriptor_item" />
 
         <include
             android:id="@+id/last_used_transport_type_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             layout="@layout/card_descriptor_item" />
 
         <include
             android:id="@+id/last_used_transport_number_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             layout="@layout/card_descriptor_item" />
 
         <include
             android:id="@+id/last_used_charge_type_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             layout="@layout/card_descriptor_item" />
 
-        <include
-            layout="@layout/separator" />
+        <include layout="@layout/separator" />
 
         <TextView
             android:id="@+id/recharge_info_tf"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:gravity="center_horizontal|center_vertical"
             android:inputType="none"
             android:text="@string/recharge_info_tf_string"
@@ -105,31 +173,34 @@
         <include
             android:id="@+id/recharged_on_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             layout="@layout/card_descriptor_item" />
 
         <include
             android:id="@+id/recharged_at_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             layout="@layout/card_descriptor_item" />
 
         <include
             android:id="@+id/recharged_by_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             layout="@layout/card_descriptor_item" />
 
-        <include
-            layout="@layout/separator" />
+        <include layout="@layout/separator" />
 
         <include
             android:id="@+id/last_updated_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             layout="@layout/card_descriptor_item" />
-        <include
-            layout="@layout/separator" />
+
+        <include layout="@layout/separator" />
     </LinearLayout>
 
 </ScrollView>

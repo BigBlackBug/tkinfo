@@ -9,5 +9,6 @@
     
     <string name="add_card">Добавить Карту</string>
     <string name="update_card">Обновить</string>
+    <string name="delete_card">Удалить</string>
 
 </resources>

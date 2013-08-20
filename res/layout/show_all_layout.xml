@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_scroll_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clickable="true"
-    android:descendantFocusability="beforeDescendants" >
+    android:layout_height="wrap_content" >
 
     <LinearLayout
+        android:id="@+id/main_show_all_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" >
 
         <TextView
             android:id="@+id/general_info_tf"
@@ -27,10 +27,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             layout="@layout/card_descriptor_item" />
-
         -->
 
         <LinearLayout
+            android:id="@+id/name_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -51,36 +51,27 @@
                 android:id="@+id/__name_value_tf"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="0.45"
+                android:layout_weight="0.5"
+                android:drawablePadding="5dp"
+                android:drawableRight="@drawable/edit_icon"
                 android:gravity="left"
                 android:inputType="none"
                 android:paddingLeft="5dp"
                 android:textSize="14sp" />
 
-            <EditText
+            <com.testwidget.TranskartEditText
                 android:id="@+id/___name_et"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="0.45"
+                android:layout_weight="0.5"
+                android:drawablePadding="5dp"
+                android:drawableRight="@drawable/edit_icon"
                 android:gravity="left"
-                android:imeActionId="@integer/edit_text_action_code"
-                android:imeActionLabel="L"
-                android:imeOptions="actionDone"
-                android:inputType="none"
+                android:inputType="textAutoComplete|text"
                 android:paddingLeft="5dp"
                 android:singleLine="true"
                 android:textSize="14sp"
                 android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/edit_card_name_image_view"
-                android:clickable="true"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.05"
-                android:adjustViewBounds="true"
-                android:scaleType="centerInside"
-                android:src="@drawable/edit_icon" />
         </LinearLayout>
 
         <include

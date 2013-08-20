@@ -9,4 +9,6 @@
     <string name="card_number">Номер карты: %1$s</string>
     <string name="card_balance">Баланс: %1$s руб</string>
     
+    <string name="edit_text_label">Готово</string>
+    
 </resources>

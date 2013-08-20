@@ -6,11 +6,19 @@
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
         android:title="@string/add_card"/>
+    
     <item
         android:id="@+id/update_item"
         android:icon="@drawable/navigation_refresh"
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
         android:title="@string/update_card"/>
+    
+     <item
+        android:id="@+id/delete_card_item"
+        android:icon="@drawable/delete_card_icon"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/delete_card"/>
 
 </menu>

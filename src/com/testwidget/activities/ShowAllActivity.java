@@ -14,22 +14,24 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.testwidget.App;
+import com.testwidget.App.Duration;
+import com.testwidget.BackKeyPressListener;
 import com.testwidget.CardDescriptor;
 import com.testwidget.CardDescriptor.LastUsageInfo;
 import com.testwidget.CardDescriptor.RechargeInfo;
+import com.testwidget.TranskartEditText;
 import com.testwidget.R;
 import com.testwidget.dataprovider.DataProvider;
+import com.testwidget.dataprovider.DataProvider.CardSavingException;
 
 public class ShowAllActivity extends Activity {
 
@@ -38,20 +40,18 @@ public class ShowAllActivity extends Activity {
 	private static final int REQ_CODE = 1001;
 	
 	private String cardNumber;
+	private CardDescriptor selectedCard;
 	private DataProvider dp = App.getDataProvider();
 	private Resources resources;
-	private int actionCode;
 	
-	private ImageView editImageView;
-	private EditText nameValueEditText;
-	private View mainScrollView;
+	private TranskartEditText nameValueEditText;
+	private View mainLayout;
 	private TextView valueTextView ;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.resources = getResources();
-		this.actionCode = resources.getInteger(R.integer.edit_text_action_code);
 		
 		setContentView(R.layout.show_all_layout);
 		
@@ -59,15 +59,17 @@ public class ShowAllActivity extends Activity {
 		cardNumber = intent.getStringExtra(IntentConstants.CARD_NUMBER);
 		Log.i(TAG, "received "+cardNumber);
 		
-		CardDescriptor cd = dp.getByNumber(cardNumber);
-		prepareTextViews(cd);
+		selectedCard = dp.getByNumber(cardNumber);
+		fillTextViews();
+		
 		valueTextView = (TextView) findViewById(R.id.__name_value_tf);
-		editImageView = (ImageView) findViewById(R.id.edit_card_name_image_view);
-		editImageView.setOnClickListener(new View.OnClickListener() {
+		
+		LinearLayout nameLayout = (LinearLayout) findViewById(R.id.name_layout);
+		nameLayout.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View view) {
-				Log.i(TAG, "clicked on image view.");
+				Log.i(TAG, "clicked on layout view.");
 				valueTextView.setVisibility(View.GONE);
 				
 				EditText valueEditText = (EditText) findViewById(R.id.___name_et);
@@ -76,50 +78,69 @@ public class ShowAllActivity extends Activity {
 				
 				InputMethodManager imm = (InputMethodManager) 
 						getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+				imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 			}
 		});
 
-		nameValueEditText = (EditText) findViewById(R.id.___name_et);
+		nameValueEditText = (TranskartEditText) findViewById(R.id.___name_et);
+		nameValueEditText.addListener(new BackKeyPressListener() {
+			
+			@Override
+			public void backKeyPressed(TranskartEditText editText) {
+				Log.i(TAG, "received back keypress event");
+				revertUiState();
+			}
+		});
+		
 		nameValueEditText.setOnEditorActionListener(new OnEditorActionListener() {
 
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				Log.i(TAG, "clicked done. "+actionCode+"<has to be is>"+actionId );
-				if (actionId == actionCode) {
-					Log.i(TAG, "code OK");
-					InputMethodManager imm = (InputMethodManager)getSystemService(
-						      Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-					nameValueEditText.setVisibility(View.GONE);
-					valueTextView.setVisibility(View.VISIBLE);
-					// TODO save
-				}
-				return false;
+				if (actionId == EditorInfo.IME_ACTION_DONE ||
+		                event.getAction() == KeyEvent.ACTION_DOWN &&
+		                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+					Log.i(TAG, "clicked OK");
+					selectedCard.setCardName(nameValueEditText.getText().toString());
+					try {
+						dp.saveOrUpdateCard(selectedCard);
+						fillTextViews();
+						TranskartWidget.updateAllWidgets(getApplicationContext());
+					} catch (CardSavingException ex) {
+						App.showToast(ShowAllActivity.this, resources.getString(
+								R.string.error_writing_card_to_disk,
+								selectedCard.getCardNumber()), Duration.LONG);
+					}
+					
+					revertUiState();
+		            return true;
+		        }
+		        return false;
 			}
 		});
 		
-		mainScrollView = findViewById(R.id.main_scroll_view);
-		mainScrollView.setOnTouchListener(new OnTouchListener() {
+		mainLayout = findViewById(R.id.main_show_all_layout);
+		mainLayout.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				Log.i(TAG, "clicked on layout");
-				if(v == mainScrollView){
-					Log.i(TAG, "hiding keyboard");
-					if(nameValueEditText.isShown()){
-						//TODO discard  changes
-						InputMethodManager imm = (InputMethodManager) 
-								getSystemService(Context.INPUT_METHOD_SERVICE);
-						imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-						nameValueEditText.setVisibility(View.GONE);
-						valueTextView.setVisibility(View.VISIBLE);
-					}
+				Log.i(TAG, "hiding keyboard");
+				if (nameValueEditText.isShown()) {
+					revertUiState();
 				}
 				return true;
 			}
 		});
 	
+	}
+	
+	private void revertUiState(){
+		InputMethodManager imm = (InputMethodManager) 
+				getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(nameValueEditText.getWindowToken(), 0);
+		nameValueEditText.setVisibility(View.GONE);
+		nameValueEditText.setText("");
+		valueTextView.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -128,30 +149,30 @@ public class ShowAllActivity extends Activity {
 		cardNumber = intent.getStringExtra(IntentConstants.CARD_NUMBER);
 		Log.i(TAG, "onnewintent received "+cardNumber);
 		
-		CardDescriptor cd = dp.getByNumber(cardNumber);
-		prepareTextViews(cd);
+		selectedCard = dp.getByNumber(cardNumber);
+		fillTextViews();
 		
 	}
-	private void prepareTextViews(CardDescriptor cd) {
+	private void fillTextViews() {
 		Resources resources = getResources();
 		TextView columnDescriptionView = (TextView) 
 				findViewById(R.id.__name_description_tf);
 		columnDescriptionView.setText(resources.getString(R.string.card_name_string));
 		TextView columnValueView = (TextView) findViewById(R.id.__name_value_tf);
-		columnValueView.setText(cd.getCardName());
+		columnValueView.setText(selectedCard.getCardName());
 		
 		setDescription(R.id.card_balance_block,
-				resources.getString(R.string.card_balance_string), cd.getBalanceString());
+				resources.getString(R.string.card_balance_string), selectedCard.getBalanceString());
 		setDescription(R.id.card_number_block,
-				resources.getString(R.string.card_number_string), cd.getCardNumber());
+				resources.getString(R.string.card_number_string), selectedCard.getCardNumber());
 		setDescription(R.id.card_type_block,
-				resources.getString(R.string.card_type_string), cd.getCardType());
+				resources.getString(R.string.card_type_string), selectedCard.getCardType());
 		setDescription(R.id.last_activated_block,
 				resources.getString(R.string.last_activated_string),
-				cd.getActivationDate().getFormattedString());
+				selectedCard.getActivationDate().getFormattedString());
 		setDescription(R.id.valid_until_block,
-				resources.getString(R.string.valid_until_string), cd.getValidUntil().getFormattedString());
-		LastUsageInfo lastUsageInfo = cd.getLastUsageInfo();
+				resources.getString(R.string.valid_until_string), selectedCard.getValidUntil().getFormattedString());
+		LastUsageInfo lastUsageInfo = selectedCard.getLastUsageInfo();
 		setDescription(R.id.last_used_date_block,
 				resources.getString(R.string.date_string),
 				lastUsageInfo.getDate().getFormattedString());
@@ -165,7 +186,7 @@ public class ShowAllActivity extends Activity {
 		setDescription(R.id.last_used_charge_type_block,
 				resources.getString(R.string.last_used_charge_type_string),
 				lastUsageInfo.getOperationType());
-		RechargeInfo rechargeInfo = cd.getRechargeInfo();
+		RechargeInfo rechargeInfo = selectedCard.getRechargeInfo();
 		setDescription(R.id.recharged_on_block,
 				resources.getString(R.string.date_string),
 				rechargeInfo.getRechargeDate().getFormattedString());
@@ -177,7 +198,7 @@ public class ShowAllActivity extends Activity {
 				rechargeInfo.getRechargeAmountString());
 		setDescription(R.id.last_updated_block,
 				resources.getString(R.string.last_updated_string),
-				cd.getLastUpdated().getFormattedString());
+				selectedCard.getLastUpdated().getFormattedString());
 	}
 
 	private void setDescription(int layoutId, String columnDescription,
@@ -250,8 +271,8 @@ public class ShowAllActivity extends Activity {
 			Log.i(TAG, "reqcode OK "+resultCode);
 			if(resultCode == RESULT_OK){
 				Log.i(TAG, "res code OK");
-				CardDescriptor cd = dp.getByNumber(cardNumber);
-				prepareTextViews(cd);
+				selectedCard = dp.getByNumber(cardNumber);
+				fillTextViews();
 			}
 		}
 	}

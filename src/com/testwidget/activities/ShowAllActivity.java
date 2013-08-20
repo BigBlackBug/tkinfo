@@ -17,7 +17,6 @@ import android.view.View.OnTouchListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -28,8 +27,8 @@ import com.testwidget.BackKeyPressListener;
 import com.testwidget.CardDescriptor;
 import com.testwidget.CardDescriptor.LastUsageInfo;
 import com.testwidget.CardDescriptor.RechargeInfo;
-import com.testwidget.TranskartEditText;
 import com.testwidget.R;
+import com.testwidget.TranskartEditText;
 import com.testwidget.dataprovider.DataProvider;
 import com.testwidget.dataprovider.DataProvider.CardSavingException;
 
@@ -256,6 +255,12 @@ public class ShowAllActivity extends Activity {
 //			intent.putExtra(IntentConstants.WIDTH, rect.right - rect.left);
 			intent.putExtra(IntentConstants.CARD_NUMBER,cardNumber);
 			startActivityForResult(intent, REQ_CODE);
+			return true;
+		}
+		case R.id.delete_card_item:{
+			DeleteCardDialogFragment newFragment = new DeleteCardDialogFragment();
+			newFragment.setCardNumber(cardNumber);
+		    newFragment.show(getFragmentManager(), DeleteCardDialogFragment.TAG);
 			return true;
 		}
 		default: {

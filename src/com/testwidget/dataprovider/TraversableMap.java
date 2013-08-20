@@ -61,4 +61,13 @@ public class TraversableMap<K, V> extends AbstractMap<K, V> {
 		return mapData.entrySet();
 	}
 
+	@Override
+	public V remove(Object key) {
+		if (containsKey(key)) {
+			previous();
+			return super.remove(key);
+		} else {
+			return null;
+		}
+	}
 }

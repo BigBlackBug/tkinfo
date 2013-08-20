@@ -114,6 +114,7 @@ public final class R {
         public static final int card_updating_success=0x7f05000f;
         public static final int date_string=0x7f05001d;
         public static final int delete_card=0x7f050007;
+        public static final int delete_card_prompt=0x7f05002b;
         public static final int edit_text_label=0x7f05002a;
         public static final int empty_card_name_field=0x7f05000a;
         public static final int empty_card_number_field=0x7f050009;
@@ -139,6 +140,7 @@ public final class R {
         public static final int save_new_card=0x7f050003;
         public static final int title_activity_add_new_card=0x7f050000;
         public static final int title_activity_show_info=0x7f050013;
+        public static final int update_button_text=0x7f05002c;
         public static final int update_card=0x7f050006;
         public static final int valid_until_string=0x7f05001c;
         public static final int version_name=0x7f050024;

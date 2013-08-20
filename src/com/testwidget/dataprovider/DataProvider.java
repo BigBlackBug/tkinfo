@@ -130,4 +130,14 @@ public class DataProvider {
 	public static class CardSavingException extends RuntimeException {
 
 	}
+
+	public void deleteCard(String cardNumber) {
+		data.remove(cardNumber);
+		boolean fileDeleted = new File(getNewCardFile(cardNumber)).delete();
+		if(fileDeleted){
+			Log.i(TAG, "card file "+cardNumber+" has been deleted");
+		}else{
+			Log.i(TAG, "error deleting "+cardNumber+" file");
+		}
+	}
 }

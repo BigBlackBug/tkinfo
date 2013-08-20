@@ -11,4 +11,8 @@
     
     <string name="edit_text_label">Готово</string>
     
+    <string name="delete_card_prompt">Удалить карту №%1$s?</string>
+    
+    <string name="update_button_text">Обновить</string>
+    
 </resources>

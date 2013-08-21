@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -46,7 +48,6 @@ public class AddNewCardActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Log.i("add", "on create");
 		setContentView(R.layout.activity_add_new_card);
-		this.resources = getResources();
 		
 		try {
 			new CaptchaFetcher().execute();
@@ -61,6 +62,7 @@ public class AddNewCardActivity extends Activity {
 		captchaLayout = (LinearLayout) findViewById(R.id.captcha_layout);
 		captchaTextView = (TextView) findViewById(R.id.captcha_text_view_);
 		cardNumberTf = (TextView) findViewById(R.id.card_number_tf);
+		
 		
 		Button backButton = (Button) findViewById(R.id.back_button);
 
@@ -90,30 +92,31 @@ public class AddNewCardActivity extends Activity {
 		});
 		
 	}
-@Override
-protected void onResume() {
-	super.onResume();
-	Log.i("add", "on resume");
-	NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-	if (nfcAdapter != null) {
-		App.setupForegroundDispatch(this, nfcAdapter);
-	}
-}
 
-@Override
-protected void onPause() {
-	super.onPause();
-	Log.i("add", "on pause");
-	NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-	if (nfcAdapter != null) {
-		App.stopForegroundDispatch(this, nfcAdapter);
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.i("add", "on resume");
+		NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+		if (nfcAdapter != null) {
+			App.setupForegroundDispatch(this, nfcAdapter);
+		}
 	}
-}
 
-@Override
-protected void onNewIntent(Intent intent) {
-	String action = intent.getAction();
-	if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.i("add", "on pause");
+		NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+		if (nfcAdapter != null) {
+			App.stopForegroundDispatch(this, nfcAdapter);
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		String action = intent.getAction();
+		if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
 		Tag intentTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 		MifareClassic mfc = MifareClassic.get(intentTag);
 		byte[] data;
@@ -138,9 +141,10 @@ protected void onNewIntent(Intent intent) {
 			}
 		} catch (IOException e) {
 			Log.e("tag", "connection dropped", e);
+			}
 		}
 	}
-}
+
 	private class CaptchaFetcher extends AsyncTask<Void, Void, Drawable> {
 		
 		private static final int ACTIVITY_CLOSE_DELAY = 1500;

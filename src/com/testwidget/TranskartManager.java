@@ -58,7 +58,9 @@ public class TranskartManager {
 
 		public Drawable getCaptcha() throws IOException {
 			File captcha = grabCaptcha();
-			return Drawable.createFromPath(captcha.getAbsolutePath());
+			Drawable drawable = Drawable.createFromPath(captcha.getAbsolutePath());
+			captcha.delete();
+			return drawable;
 		}
 
 		private File grabCaptcha() throws IOException {

@@ -11,9 +11,9 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.testwidget.App;
-import com.testwidget.CardDescriptor;
-import com.testwidget.R;
+import com.qbix.transkartwidget.App;
+import com.qbix.transkartwidget.CardDescriptor;
+import com.qbix.transkartwidget.R;
 import com.testwidget.dataprovider.DataProvider;
 import com.testwidget.dataprovider.DataProvider.NoDataException;
 

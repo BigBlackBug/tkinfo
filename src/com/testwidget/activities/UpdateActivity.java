@@ -17,13 +17,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.testwidget.App;
-import com.testwidget.App.Duration;
-import com.testwidget.CardDescriptor;
-import com.testwidget.R;
-import com.testwidget.TranskartManager;
-import com.testwidget.TranskartManager.DocumentValidationException;
-import com.testwidget.TranskartManager.TranskartSession;
+import com.qbix.transkartwidget.App;
+import com.qbix.transkartwidget.App.Duration;
+import com.qbix.transkartwidget.CardDescriptor;
+import com.qbix.transkartwidget.R;
+import com.qbix.transkartwidget.TranskartManager;
+import com.qbix.transkartwidget.TranskartManager.DocumentValidationException;
+import com.qbix.transkartwidget.TranskartManager.TranskartSession;
 import com.testwidget.dataprovider.DataProvider.CardSavingException;
 
 public class UpdateActivity extends Activity {

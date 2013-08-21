@@ -21,14 +21,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.testwidget.App;
-import com.testwidget.App.Duration;
-import com.testwidget.BackKeyPressListener;
-import com.testwidget.CardDescriptor;
-import com.testwidget.CardDescriptor.LastUsageInfo;
-import com.testwidget.CardDescriptor.RechargeInfo;
-import com.testwidget.R;
-import com.testwidget.TranskartEditText;
+import com.qbix.transkartwidget.App;
+import com.qbix.transkartwidget.App.Duration;
+import com.qbix.transkartwidget.BackKeyPressListener;
+import com.qbix.transkartwidget.CardDescriptor;
+import com.qbix.transkartwidget.CardDescriptor.LastUsageInfo;
+import com.qbix.transkartwidget.CardDescriptor.RechargeInfo;
+import com.qbix.transkartwidget.R;
+import com.qbix.transkartwidget.TranskartEditText;
 import com.testwidget.dataprovider.DataProvider;
 import com.testwidget.dataprovider.DataProvider.CardSavingException;
 

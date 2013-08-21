@@ -6,7 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import com.testwidget.CardDescriptor;
+
+import com.qbix.transkartwidget.CardDescriptor;
 
 import android.content.Context;
 import android.util.Log;

@@ -1,4 +1,4 @@
-package com.testwidget;
+package com.qbix.transkartwidget;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,6 @@
-package com.testwidget;
+package com.qbix.transkartwidget;
+
+import java.util.Date;
 
 import android.app.Activity;
 import android.app.Application;
@@ -28,13 +30,13 @@ public class App extends Application {
 		super.onCreate();
 		dataProvider = new DataProvider(getApplicationContext());
 		Log.i("app", "app started "+ String.valueOf(dataProvider.size()));
-//		DataProvider dp = App.getDataProvider();
-//		CardDescriptor cd = new CardDescriptor();
-//		cd.setCardName("a2");
-//		cd.setCardNumber(		"3894706279");
-//		cd.setBalance(514);
-//		cd.setLastUpdated(new Date());
-//		dp.saveOrUpdateCard(cd);
+		DataProvider dp = App.getDataProvider();
+		CardDescriptor cd = new CardDescriptor();
+		cd.setCardName("a2");
+		cd.setCardNumber(		"3894706279");
+		cd.setBalance(514);
+		cd.setLastUpdated(new Date());
+		dp.saveOrUpdateCard(cd);
 //		
 //		CardDescriptor cd2 = new CardDescriptor();
 //		cd2.setCardName("a");

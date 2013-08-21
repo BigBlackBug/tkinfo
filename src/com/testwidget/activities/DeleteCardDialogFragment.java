@@ -7,8 +7,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.testwidget.App;
-import com.testwidget.R;
+import com.qbix.transkartwidget.App;
+import com.qbix.transkartwidget.R;
 
 public class DeleteCardDialogFragment extends DialogFragment {
 	

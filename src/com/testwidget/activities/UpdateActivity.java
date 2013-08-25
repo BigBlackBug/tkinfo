@@ -1,13 +1,20 @@
 package com.testwidget.activities;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
@@ -30,10 +37,11 @@ public class UpdateActivity extends Activity {
 
 	private static final String TAG = "update_activity";
 	private Resources resources;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.i(TAG, "onCreate");
 		setContentView(new ProgressBar(this));
 		setFinishOnTouchOutside(true);
 		this.resources = getResources();
@@ -73,7 +81,7 @@ public class UpdateActivity extends Activity {
 		
 		@Override
 		protected void onPostExecute(Drawable captcha) {
-			if(throwable == null){
+			if (throwable == null) {
 				activity.setContentView(R.layout.update_layout);
 				ImageView c = (ImageView) activity.findViewById(R.id.captcha_image_view);
 				Drawable scaledCaptcha = App.scaleDrawable(
@@ -115,11 +123,22 @@ public class UpdateActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
+			final EditText et = (EditText) activity.findViewById(R.id.captcha_text_view);
+			App.postToMainThreadAfterDelay(new Runnable() {
+				
+				@Override
+				public void run() {
+					InputMethodManager imm = (InputMethodManager) 
+							getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+					activity.finish();
+				}
+			}, 500);
+			
 			new AsyncTask<Void, Void, CardDescriptor>() {
 
 				@Override
 				protected CardDescriptor doInBackground(Void... params) {
-					EditText et = (EditText) activity.findViewById(R.id.captcha_text_view);
 					Editable captchaValue = et.getText();
 					try {
 						String cardNumber = activity.getIntent()
@@ -171,5 +190,4 @@ public class UpdateActivity extends Activity {
 			}.execute();
 		}
 	}
-	
 }

@@ -1,7 +1,5 @@
 package com.qbix.transkartwidget;
 
-import java.util.Date;
-
 import android.app.Activity;
 import android.app.Application;
 import android.app.PendingIntent;
@@ -16,7 +14,6 @@ import android.nfc.NfcAdapter;
 import android.nfc.tech.MifareClassic;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.testwidget.dataprovider.DataProvider;
@@ -24,19 +21,20 @@ import com.testwidget.dataprovider.DataProvider;
 public class App extends Application {
 	
 	private static DataProvider dataProvider;
-	
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
 		dataProvider = new DataProvider(getApplicationContext());
-		Log.i("app", "app started "+ String.valueOf(dataProvider.size()));
-		DataProvider dp = App.getDataProvider();
-		CardDescriptor cd = new CardDescriptor();
-		cd.setCardName("a2");
-		cd.setCardNumber(		"3894706279");
-		cd.setBalance(514);
-		cd.setLastUpdated(new Date());
-		dp.saveOrUpdateCard(cd);
+//		Log.i("app", "app started "+ String.valueOf(dataProvider.size()));
+//		DataProvider dp = App.getDataProvider();
+//		CardDescriptor cd = new CardDescriptor();
+//		cd.setCardName("a2");
+//		cd.setCardNumber(		"3894706279");
+//		cd.setBalance(514);
+//		cd.setLastUpdated(new Date());
+//		dp.saveOrUpdateCard(cd);
 //		
 //		CardDescriptor cd2 = new CardDescriptor();
 //		cd2.setCardName("a");
@@ -109,7 +107,7 @@ public class App extends Application {
 	}
 
 	public static void closeAfterDelay(final Activity activity, int delay) {
-		new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+		postToMainThreadAfterDelay(new Runnable() {
 
 			@Override
 			public void run() {
@@ -117,6 +115,10 @@ public class App extends Application {
 
 			}
 		}, delay);
+	}
+	
+	public static void postToMainThreadAfterDelay(Runnable action, int delay) {
+		new Handler(Looper.getMainLooper()).postDelayed(action, delay);
 	}
 
 }

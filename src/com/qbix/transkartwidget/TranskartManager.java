@@ -44,16 +44,20 @@ public class TranskartManager {
 		private static final String IMAGE_TAG = "img";
 		private static final String VIEW_STATE = "__VIEWSTATE";
 		private static final String EVENT_VALIDATION = "__EVENTVALIDATION";
+		private static final int REQUEST_DELAY = 5000;
 
 		private final Document initialDocument;
 		private final String eventValidation;
 		private final String viewState;
+		
+		private final long nextRequestTime;
 
 		public TranskartSession(Document initialDocument) {
 			this.initialDocument = initialDocument;
 			this.eventValidation = initialDocument.select("#"+EVENT_VALIDATION)
 					.val();
 			this.viewState = initialDocument.select("#"+VIEW_STATE).val();
+			this.nextRequestTime = System.currentTimeMillis() + REQUEST_DELAY;
 		}
 
 		public Drawable getCaptcha() throws IOException {
@@ -76,7 +80,12 @@ public class TranskartManager {
 		}
 
 		public CardDescriptor getCardDescriptor(String captcha, String cardNumber)
-				throws IOException, DocumentValidationException {
+				throws IOException, DocumentValidationException, InterruptedException {
+			long sleepTime = nextRequestTime - System.currentTimeMillis();
+			Log.i(TAG, "sleep time " +sleepTime);
+			if(sleepTime > 0){
+				Thread.sleep(sleepTime);
+			}
 			Document document = getCardDocument(captcha, cardNumber);
 			CardDescriptor cd = new CardDescriptor();
 

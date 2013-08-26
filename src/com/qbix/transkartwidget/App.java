@@ -106,7 +106,7 @@ public class App extends Application {
 		adapter.disableForegroundDispatch(activity);
 	}
 
-	public static void closeAfterDelay(final Activity activity, int delay) {
+	public static void closeActivityAfterDelay(final Activity activity, int delay) {
 		postToMainThreadAfterDelay(new Runnable() {
 
 			@Override

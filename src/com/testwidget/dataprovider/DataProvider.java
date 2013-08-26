@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Map.Entry;
 
 import com.qbix.transkartwidget.CardDescriptor;
 
@@ -115,6 +116,17 @@ public class DataProvider {
 			throw new CardLoadingException();
 		}
 	}
+	
+	public void removeCurrentCard(){
+		Entry<String, CardDescriptor> current = data.removeCurrent();
+		String cardNumber = current.getKey();
+		boolean fileDeleted = new File(getNewCardFile(cardNumber)).delete();
+		if(fileDeleted){
+			Log.i(TAG, "card file "+cardNumber+" has been removed");
+		}else{
+			Log.i(TAG, "error deleting "+cardNumber+" file");
+		}
+	}
 
 	public static class CardLoadingException extends RuntimeException {
 
@@ -132,13 +144,4 @@ public class DataProvider {
 
 	}
 
-	public void deleteCard(String cardNumber) {
-		data.remove(cardNumber);
-		boolean fileDeleted = new File(getNewCardFile(cardNumber)).delete();
-		if(fileDeleted){
-			Log.i(TAG, "card file "+cardNumber+" has been deleted");
-		}else{
-			Log.i(TAG, "error deleting "+cardNumber+" file");
-		}
-	}
 }

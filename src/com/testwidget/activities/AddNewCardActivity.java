@@ -46,6 +46,7 @@ public class AddNewCardActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Log.i("add", "on create");
 		setContentView(R.layout.activity_add_new_card);
+		this.resources = getResources();
 		
 		try {
 			new CaptchaFetcher().execute();
@@ -202,7 +203,7 @@ public class AddNewCardActivity extends Activity {
 							Duration.LONG);	
 					Log.e(TAG, "internal app error", throwable);
 				}
-				App.closeAfterDelay(activity, ACTIVITY_CLOSE_DELAY);
+				App.closeActivityAfterDelay(activity, ACTIVITY_CLOSE_DELAY);
 				Log.i(TAG, "error fetching captcha", throwable);
 			}
 		};

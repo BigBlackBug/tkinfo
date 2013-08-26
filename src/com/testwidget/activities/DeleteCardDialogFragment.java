@@ -32,9 +32,10 @@ public class DeleteCardDialogFragment extends DialogFragment {
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								Log.i(TAG, "clicked ok to delete");
-								App.getDataProvider().deleteCard(cardNumber);
+//								App.getDataProvider().deleteCard(cardNumber);
+								App.getDataProvider().removeCurrentCard();
 								TranskartWidget.updateAllWidgets(getActivity());
-								App.closeAfterDelay(getActivity(), 1000);
+								App.closeActivityAfterDelay(getActivity(), 1000);
 							}
 						})
 				.setNegativeButton(R.string.cancel,

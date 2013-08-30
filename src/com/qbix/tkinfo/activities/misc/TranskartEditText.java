@@ -1,7 +1,10 @@
-package com.qbix.transkartwidget;
+package com.qbix.tkinfo.activities.misc;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.qbix.tkinfo.R;
+import com.qbix.tkinfo.R.string;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -1,20 +1,13 @@
-package com.testwidget.activities;
+package com.qbix.tkinfo.activities;
 
 import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
@@ -24,14 +17,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.qbix.transkartwidget.App;
-import com.qbix.transkartwidget.App.Duration;
-import com.qbix.transkartwidget.CardDescriptor;
-import com.qbix.transkartwidget.R;
-import com.qbix.transkartwidget.TranskartManager;
-import com.qbix.transkartwidget.TranskartManager.DocumentValidationException;
-import com.qbix.transkartwidget.TranskartManager.TranskartSession;
-import com.testwidget.dataprovider.DataProvider.CardSavingException;
+import com.qbix.tkinfo.App;
+import com.qbix.tkinfo.App.Duration;
+import com.qbix.tkinfo.R;
+import com.qbix.tkinfo.activities.misc.IntentConstants;
+import com.qbix.tkinfo.model.CardDescriptor;
+import com.qbix.tkinfo.model.TranskartManager;
+import com.qbix.tkinfo.model.DataProvider.CardSavingException;
+import com.qbix.tkinfo.model.TranskartManager.DocumentValidationException;
+import com.qbix.tkinfo.model.TranskartManager.TranskartSession;
 
 public class UpdateActivity extends Activity {
 

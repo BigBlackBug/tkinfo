@@ -6,7 +6,7 @@
     <string name="empty_card_name_field">Поле имени карты пустое</string>
     <string name="internal_app_error">Внутренняя ошибка приложения</string> 
     <string name="card_adding_success">Карта №%1$s была успешно добавлена</string>
-    <string name="card_already_saved">Карта №%1$s уже сохранена</string>
+    <string name="card_already_saved">Карта №%1$s уже есть в базе данных</string>
     <string name="error_writing_card_to_disk">Ошибка записи карты №%1$s на диск</string>
     <string name="card_updating_success">Информация о карте №%1$s была успешно обновлена</string>
     <string name="error_fetching_data">Не могу получить инфомацию о карте №%1$s</string>

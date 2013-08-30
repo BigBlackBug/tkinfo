@@ -1,4 +1,4 @@
-package com.qbix.transkartwidget;
+package com.qbix.tkinfo.model;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -15,7 +15,7 @@ public class CardDescriptor implements Serializable {// 10+2 fields
 	private static final SimpleDateFormat TIME_FORMATTER = new SimpleDateFormat(
 			"HH:mm:ss");
 	private static final SimpleDateFormat DATE_TIME_FORMATTER = new SimpleDateFormat(
-			"dd.MM.yyyy HH:mm:ss");
+			"HH:mm:ss dd.MM.yyyy");
 
 	private int balance;
 	private DateWrapper lastUpdated;

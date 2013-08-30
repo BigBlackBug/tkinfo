@@ -1,4 +1,4 @@
-package com.qbix.transkartwidget;
+package com.qbix.tkinfo.model;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -21,8 +21,9 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-import com.qbix.transkartwidget.CardDescriptor.LastUsageInfo;
-import com.qbix.transkartwidget.CardDescriptor.RechargeInfo;
+import com.qbix.tkinfo.R;
+import com.qbix.tkinfo.model.CardDescriptor.LastUsageInfo;
+import com.qbix.tkinfo.model.CardDescriptor.RechargeInfo;
 
 public class TranskartManager {
 

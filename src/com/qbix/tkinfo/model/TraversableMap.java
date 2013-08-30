@@ -1,4 +1,4 @@
-package com.testwidget.dataprovider;
+package com.qbix.tkinfo.model;
 
 import java.util.AbstractMap;
 import java.util.Collection;
@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.testwidget.dataprovider.DataProvider.NoDataException;
+import com.qbix.tkinfo.model.DataProvider.NoDataException;
 
 public class TraversableMap<K, V> extends AbstractMap<K, V> {
 

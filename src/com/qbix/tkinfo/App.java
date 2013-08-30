@@ -1,4 +1,4 @@
-package com.qbix.transkartwidget;
+package com.qbix.tkinfo;
 
 import android.app.Activity;
 import android.app.Application;
@@ -14,9 +14,10 @@ import android.nfc.NfcAdapter;
 import android.nfc.tech.MifareClassic;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.testwidget.dataprovider.DataProvider;
+import com.qbix.tkinfo.model.DataProvider;
 //3894706279 2938811773
 public class App extends Application {
 	
@@ -27,7 +28,9 @@ public class App extends Application {
 		super.onCreate();
 		
 		dataProvider = new DataProvider(getApplicationContext());
-//		Log.i("app", "app started "+ String.valueOf(dataProvider.size()));
+
+		Log.i("app", "app started "+ String.valueOf(dataProvider.size()));
+		
 //		DataProvider dp = App.getDataProvider();
 //		CardDescriptor cd = new CardDescriptor();
 //		cd.setCardName("a2");

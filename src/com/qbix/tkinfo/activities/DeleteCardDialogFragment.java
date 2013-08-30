@@ -1,4 +1,4 @@
-package com.testwidget.activities;
+package com.qbix.tkinfo.activities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,8 +7,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.qbix.transkartwidget.App;
-import com.qbix.transkartwidget.R;
+import com.qbix.tkinfo.App;
+import com.qbix.tkinfo.R;
 
 public class DeleteCardDialogFragment extends DialogFragment {
 	

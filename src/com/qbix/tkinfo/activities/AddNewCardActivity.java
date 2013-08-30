@@ -1,4 +1,4 @@
-package com.testwidget.activities;
+package com.qbix.tkinfo.activities;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -22,15 +22,15 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.qbix.transkartwidget.App;
-import com.qbix.transkartwidget.App.Duration;
-import com.qbix.transkartwidget.CardDescriptor;
-import com.qbix.transkartwidget.R;
-import com.qbix.transkartwidget.TranskartManager;
-import com.qbix.transkartwidget.TranskartManager.DocumentValidationException;
-import com.qbix.transkartwidget.TranskartManager.TranskartSession;
-import com.testwidget.dataprovider.DataProvider.CardSavingException;
-import com.testwidget.dataprovider.DataProvider.DuplicateCardException;
+import com.qbix.tkinfo.App;
+import com.qbix.tkinfo.App.Duration;
+import com.qbix.tkinfo.R;
+import com.qbix.tkinfo.model.CardDescriptor;
+import com.qbix.tkinfo.model.TranskartManager;
+import com.qbix.tkinfo.model.DataProvider.CardSavingException;
+import com.qbix.tkinfo.model.DataProvider.DuplicateCardException;
+import com.qbix.tkinfo.model.TranskartManager.DocumentValidationException;
+import com.qbix.tkinfo.model.TranskartManager.TranskartSession;
 
 public class AddNewCardActivity extends Activity {
 	private static final String TAG = "add_new_card_activity";

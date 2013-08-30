@@ -1,4 +1,4 @@
-package com.testwidget.activities;
+package com.qbix.tkinfo.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,16 +21,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.qbix.transkartwidget.App;
-import com.qbix.transkartwidget.App.Duration;
-import com.qbix.transkartwidget.BackKeyPressListener;
-import com.qbix.transkartwidget.CardDescriptor;
-import com.qbix.transkartwidget.CardDescriptor.LastUsageInfo;
-import com.qbix.transkartwidget.CardDescriptor.RechargeInfo;
-import com.qbix.transkartwidget.R;
-import com.qbix.transkartwidget.TranskartEditText;
-import com.testwidget.dataprovider.DataProvider;
-import com.testwidget.dataprovider.DataProvider.CardSavingException;
+import com.qbix.tkinfo.App;
+import com.qbix.tkinfo.App.Duration;
+import com.qbix.tkinfo.R;
+import com.qbix.tkinfo.activities.misc.BackKeyPressListener;
+import com.qbix.tkinfo.activities.misc.IntentConstants;
+import com.qbix.tkinfo.activities.misc.TranskartEditText;
+import com.qbix.tkinfo.model.CardDescriptor;
+import com.qbix.tkinfo.model.DataProvider;
+import com.qbix.tkinfo.model.CardDescriptor.LastUsageInfo;
+import com.qbix.tkinfo.model.CardDescriptor.RechargeInfo;
+import com.qbix.tkinfo.model.DataProvider.CardSavingException;
 
 public class ShowAllActivity extends Activity {
 

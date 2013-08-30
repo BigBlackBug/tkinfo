@@ -1,4 +1,4 @@
-package com.testwidget.dataprovider;
+package com.qbix.tkinfo.model;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,7 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Map.Entry;
 
-import com.qbix.transkartwidget.CardDescriptor;
 
 import android.content.Context;
 import android.util.Log;

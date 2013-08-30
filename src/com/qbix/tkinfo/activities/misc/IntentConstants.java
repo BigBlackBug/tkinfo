@@ -1,4 +1,4 @@
-package com.testwidget.activities;
+package com.qbix.tkinfo.activities.misc;
 
 public class IntentConstants {
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.qbix.transkartwidget"
+    package="com.qbix.tkinfo"
     android:installLocation="internalOnly"
-    android:versionCode="6"
-    android:versionName="0.95 RC" >
+    android:versionCode="10"
+    android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -11,29 +11,30 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.NFC" />
-    
+
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="false" />
 
     <application
-        android:name="com.qbix.transkartwidget.App"
+        android:name="com.qbix.tkinfo.App"
         android:allowBackup="true"
+        android:configChanges="keyboardHidden|orientation"
         android:icon="@drawable/logo"
         android:label="@string/app_name" >
         <activity
-            android:name="com.testwidget.activities.UpdateActivity"
+            android:name="com.qbix.tkinfo.activities.UpdateActivity"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:theme="@style/MyTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
-        <receiver android:name="com.testwidget.activities.TranskartWidget" >
+        <receiver android:name="com.qbix.tkinfo.activities.TranskartWidget" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.testwidget.ACTION_UPDATE_CARD" />
-                <action android:name="com.testwidget.ACTION_NEXT_CARD" />
-                <action android:name="com.testwidget.ACTION_PREVIOUS_CARD" />
+                <action android:name="com.qbix.tkinfo.ACTION_UPDATE_CARD" />
+                <action android:name="com.qbix.tkinfo.ACTION_NEXT_CARD" />
+                <action android:name="com.qbix.tkinfo.ACTION_PREVIOUS_CARD" />
             </intent-filter>
 
             <meta-data
@@ -42,13 +43,13 @@
         </receiver>
 
         <activity
-            android:name="com.testwidget.activities.ShowAllActivity"
+            android:name="com.qbix.tkinfo.activities.ShowAllActivity"
             android:label="@string/title_activity_show_info"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
         <activity
-            android:name="com.testwidget.activities.AddNewCardActivity"
+            android:name="com.qbix.tkinfo.activities.AddNewCardActivity"
             android:label="@string/title_activity_add_new_card"
             android:theme="@android:style/Theme.Holo.Light"
             android:windowSoftInputMode="stateVisible|adjustResize" >
@@ -59,6 +60,16 @@
             <meta-data
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
+        </activity>
+        <activity
+            android:name="com.qbix.tkinfo.activities.InformationActivity"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Holo.Light" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

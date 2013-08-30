@@ -1,4 +1,4 @@
-package com.testwidget.activities;
+package com.qbix.tkinfo.activities;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -11,18 +11,18 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.qbix.transkartwidget.App;
-import com.qbix.transkartwidget.CardDescriptor;
-import com.qbix.transkartwidget.R;
-import com.testwidget.dataprovider.DataProvider;
-import com.testwidget.dataprovider.DataProvider.NoDataException;
+import com.qbix.tkinfo.App;
+import com.qbix.tkinfo.R;
+import com.qbix.tkinfo.activities.misc.IntentConstants;
+import com.qbix.tkinfo.model.CardDescriptor;
+import com.qbix.tkinfo.model.DataProvider;
+import com.qbix.tkinfo.model.DataProvider.NoDataException;
 
 public class TranskartWidget extends AppWidgetProvider {
 	private static final String ACTION_APPWIDGET_UPDATE = "android.appwidget.action.APPWIDGET_UPDATE";
-	public static final String ACTION_UPDATE_CARD = "com.testwidget.ACTION_UPDATE_CARD";
-	public static final String ACTION_NEXT_CARD = "com.testwidget.ACTION_NEXT_CARD";
-	public static final String ACTION_PREVIOUS_CARD = "com.testwidget.ACTION_PREVIOUS_CARD";
-	public static final String ACTION_OPEN_DETAILS = "com.testwidget.ACTION_OPEN_DETAILS";
+	public static final String ACTION_UPDATE_CARD = "com.qbix.tkinfo.ACTION_UPDATE_CARD";
+	public static final String ACTION_NEXT_CARD = "com.qbix.tkinfo.ACTION_NEXT_CARD";
+	public static final String ACTION_PREVIOUS_CARD = "com.qbix.tkinfo.ACTION_PREVIOUS_CARD";
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,

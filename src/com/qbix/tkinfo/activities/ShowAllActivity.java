@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,9 +29,9 @@ import com.qbix.tkinfo.activities.misc.BackKeyPressListener;
 import com.qbix.tkinfo.activities.misc.IntentConstants;
 import com.qbix.tkinfo.activities.misc.TranskartEditText;
 import com.qbix.tkinfo.model.CardDescriptor;
-import com.qbix.tkinfo.model.DataProvider;
 import com.qbix.tkinfo.model.CardDescriptor.LastUsageInfo;
 import com.qbix.tkinfo.model.CardDescriptor.RechargeInfo;
+import com.qbix.tkinfo.model.DataProvider;
 import com.qbix.tkinfo.model.DataProvider.CardSavingException;
 
 public class ShowAllActivity extends Activity {
@@ -130,6 +131,15 @@ public class ShowAllActivity extends Activity {
 					revertUiState();
 				}
 				return true;
+			}
+		});
+		Button showInfoButton = (Button) findViewById(R.id.show_info_button);
+		showInfoButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ShowAllActivity.this, InformationActivity.class);
+				startActivity(intent);
 			}
 		});
 	

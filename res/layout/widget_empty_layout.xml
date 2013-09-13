@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/new_card_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/widget_bg"
     android:baselineAligned="false"
+    android:clickable="true"
     android:orientation="vertical"
     android:padding="@dimen/widget_margin" >
 
@@ -12,11 +14,10 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="center_vertical|center_horizontal"
+        android:ems="20"
         android:gravity="center"
-        android:textColor="@android:color/black"
-        android:ems="20" 
-        android:clickable="true"
-        android:text="Нажми, чтобы добавить карту">
+        android:text="@string/press_to_add_new_card"
+        android:textColor="@android:color/black" >
     </TextView>
 
 </LinearLayout>

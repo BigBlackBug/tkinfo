@@ -169,8 +169,8 @@ public class TranskartWidget extends AppWidgetProvider {
 //		startIntent.putExtra(IntentConstants.CARD_NUMBER, currentDescriptor.getCardNumber());
 //		Log.i("widget", "setting intent "+currentDescriptor.getCardNumber());
 		PendingIntent activity = PendingIntent.getActivity(context, 0,
-				startIntent, Intent.FLAG_ACTIVITY_NO_HISTORY);
-		views.setOnClickPendingIntent(R.id.new_card_text_view, activity);
+				startIntent, 0);
+		views.setOnClickPendingIntent(R.id.new_card_layout, activity);
 	}
 
 	private void fill(Context context,RemoteViews remoteViews, CardDescriptor descriptor) {

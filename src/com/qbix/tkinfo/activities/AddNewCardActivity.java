@@ -44,6 +44,8 @@ public class AddNewCardActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Intent intent = getIntent();
+		
 		Log.i("add", "on create");
 		setContentView(R.layout.activity_add_new_card);
 		this.resources = getResources();
@@ -61,8 +63,12 @@ public class AddNewCardActivity extends Activity {
 		captchaLayout = (LinearLayout) findViewById(R.id.captcha_layout);
 		captchaTextView = (TextView) findViewById(R.id.captcha_text_view_);
 		cardNumberTf = (TextView) findViewById(R.id.card_number_tf);
-		
-		
+
+		String action = intent.getAction();
+		if (action != null && NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
+			onNewIntent(getIntent());
+		}
+
 		Button backButton = (Button) findViewById(R.id.back_button);
 
 		backButton.setOnClickListener(new View.OnClickListener() {
@@ -116,30 +122,31 @@ public class AddNewCardActivity extends Activity {
 	protected void onNewIntent(Intent intent) {
 		String action = intent.getAction();
 		if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
-		Tag intentTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-		MifareClassic mfc = MifareClassic.get(intentTag);
-		byte[] data;
+			Tag intentTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+			MifareClassic mfc = MifareClassic.get(intentTag);
+			byte[] data;
 
-		try {
-			mfc.connect();
-			
-			int blockIndex = 0;
-			int sectorIndex = 0;
-			boolean auth = mfc.authenticateSectorWithKeyA(sectorIndex,
-					MifareClassic.KEY_DEFAULT);
-			if (auth) {
-				data = mfc.readBlock(blockIndex);
+			try {
+				mfc.connect();
 
-				ByteBuffer wrapped = ByteBuffer.wrap(new byte[] { 00, 00,
-						00, 00, data[3], data[2], data[1], data[0] });
-				long cardNumber = wrapped.getLong(); 
+				int blockIndex = 0;
+				int sectorIndex = 0;
+				boolean auth = mfc.authenticateSectorWithKeyA(sectorIndex,
+						MifareClassic.KEY_DEFAULT);
+				if (auth) {
+					data = mfc.readBlock(blockIndex);
 
-				cardNumberTf.setText(String.valueOf(cardNumber));
-			} else {
-				//TODO Authentication failed - Handle it
-			}
-		} catch (IOException e) {
-			Log.e("tag", "connection dropped", e);
+					ByteBuffer wrapped = ByteBuffer.wrap(new byte[] { 00, 00,
+							00, 00, data[3], data[2], data[1], data[0] });
+					long cardNumber = wrapped.getLong();
+					Log.i(TAG, "handling intent. got number "+cardNumber);
+
+					cardNumberTf.setText(String.valueOf(cardNumber));
+				} else {
+					// TODO Authentication failed - Handle it
+				}
+			} catch (IOException e) {
+				Log.e("tag", "connection dropped", e);
 			}
 		}
 	}

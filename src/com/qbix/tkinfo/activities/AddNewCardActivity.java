@@ -3,6 +3,7 @@ package com.qbix.tkinfo.activities;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import newmodel.CardDescriptor;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -25,10 +26,9 @@ import android.widget.TextView;
 import com.qbix.tkinfo.App;
 import com.qbix.tkinfo.App.Duration;
 import com.qbix.tkinfo.R;
-import com.qbix.tkinfo.model.CardDescriptor;
-import com.qbix.tkinfo.model.TranskartManager;
 import com.qbix.tkinfo.model.DataProvider.CardSavingException;
 import com.qbix.tkinfo.model.DataProvider.DuplicateCardException;
+import com.qbix.tkinfo.model.TranskartManager;
 import com.qbix.tkinfo.model.TranskartManager.DocumentValidationException;
 import com.qbix.tkinfo.model.TranskartManager.TranskartSession;
 
@@ -118,8 +118,10 @@ public class AddNewCardActivity extends Activity {
 		}
 	}
 
+	
 	@Override
 	protected void onNewIntent(Intent intent) {
+		Log.i("add","on new intent");
 		String action = intent.getAction();
 		if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
 			Tag intentTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -240,6 +242,7 @@ public class AddNewCardActivity extends Activity {
 							App.showToast(activity, resources
 									.getString(R.string.empty_card_number_field),
 									Duration.LONG);
+							return null;
 						}
 						CardDescriptor cardDescriptor = s
 								.getCardDescriptor(captchaValue
@@ -250,6 +253,7 @@ public class AddNewCardActivity extends Activity {
 							App.showToast(activity, resources
 									.getString(R.string.empty_card_name_field),
 									Duration.LONG);
+							return null;
 						}
 						cardDescriptor.setCardName(cardName);
 						return cardDescriptor;
@@ -292,6 +296,7 @@ public class AddNewCardActivity extends Activity {
 						TranskartWidget.updateAllWidgets(getApplicationContext());
 						finish();
 					}else{
+						Log.i(TAG, "restarting captcha");
 						new CaptchaFetcher().execute();
 						captchaTextView.setText("");
 					}

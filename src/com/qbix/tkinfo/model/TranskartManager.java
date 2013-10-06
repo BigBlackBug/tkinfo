@@ -11,6 +11,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import newmodel.CardDescriptor;
+import newmodel.CardDescriptor.LastUsageInfo;
+import newmodel.CardDescriptor.RechargeInfo;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -22,8 +26,6 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.qbix.tkinfo.R;
-import com.qbix.tkinfo.model.CardDescriptor.LastUsageInfo;
-import com.qbix.tkinfo.model.CardDescriptor.RechargeInfo;
 
 public class TranskartManager {
 

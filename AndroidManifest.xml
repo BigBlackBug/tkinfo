@@ -47,14 +47,7 @@
             android:label="@string/title_activity_show_info"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.Holo.Light" >
-        </activity>
-        <activity
-            android:name="com.qbix.tkinfo.activities.AddNewCardActivity"
-            android:label="@string/title_activity_add_new_card"
-            android:theme="@android:style/Theme.Holo.Light"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="stateVisible|adjustResize" >
-            <intent-filter>
+             <intent-filter android:priority="50" >
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
             </intent-filter>
 
@@ -62,6 +55,36 @@
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
         </activity>
+        <activity
+            android:name="com.qbix.tkinfo.activities.AddNewCardActivity"
+            android:label="@string/title_activity_add_new_card"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Holo.Light"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
+
+            <!--
+            <intent-filter android:priority="100">
+                <action android:name="android.nfc.action.TECH_DISCOVERED" />
+            </intent-filter>
+			
+            <meta-data
+                android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/nfc_tech_filter" />
+            -->
+        </activity>
+        <!-- activity
+            android:name="com.qbix.tkinfo.activities.NFCActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/Invisible"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
+            <intent-filter android:priority="50" >
+                <action android:name="android.nfc.action.TECH_DISCOVERED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/nfc_tech_filter" />
+        </activity>-->
         <activity
             android:name="com.qbix.tkinfo.activities.InformationActivity"
             android:launchMode="singleInstance"

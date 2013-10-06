@@ -2,21 +2,21 @@
 
     <item
         android:id="@+id/add_new_card_item"
-        android:icon="@drawable/add_card_icon"
+        android:icon="@drawable/ic_action_new"
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
         android:title="@string/add_card"/>
     
     <item
         android:id="@+id/update_item"
-        android:icon="@drawable/navigation_refresh"
+        android:icon="@drawable/ic_action_refresh"
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
         android:title="@string/update_card"/>
     
      <item
         android:id="@+id/delete_card_item"
-        android:icon="@drawable/delete_card_icon"
+        android:icon="@drawable/ic_action_discard"
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
         android:title="@string/delete_card"/>

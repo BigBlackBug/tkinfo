@@ -1,10 +1,19 @@
 package com.qbix.tkinfo.activities;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.nio.ByteBuffer;
+
+import newmodel.CardDescriptor;
+import newmodel.CardDescriptor.LastUsageInfo;
+import newmodel.CardDescriptor.RechargeInfo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.MifareClassic;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -27,10 +36,8 @@ import com.qbix.tkinfo.App.Duration;
 import com.qbix.tkinfo.R;
 import com.qbix.tkinfo.activities.misc.BackKeyPressListener;
 import com.qbix.tkinfo.activities.misc.IntentConstants;
+import com.qbix.tkinfo.activities.misc.NFCException;
 import com.qbix.tkinfo.activities.misc.TranskartEditText;
-import com.qbix.tkinfo.model.CardDescriptor;
-import com.qbix.tkinfo.model.CardDescriptor.LastUsageInfo;
-import com.qbix.tkinfo.model.CardDescriptor.RechargeInfo;
 import com.qbix.tkinfo.model.DataProvider;
 import com.qbix.tkinfo.model.DataProvider.CardSavingException;
 
@@ -38,7 +45,9 @@ public class ShowAllActivity extends Activity {
 
 	private static final String TAG = "show_all_activity";
 
-	private static final int REQ_CODE = 1001;
+	static final int UPDATE_ACTIVITY_REQUEST_CODE = 1001;
+
+	static final int FETCH_CARD_REQUEST_CODE = 2002;
 	
 	private String cardNumber;
 	private CardDescriptor selectedCard;
@@ -49,6 +58,10 @@ public class ShowAllActivity extends Activity {
 	private View mainLayout;
 	private TextView valueTextView ;
 
+	private View showInfoButton;
+
+	private boolean newlyCreated;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,13 +69,40 @@ public class ShowAllActivity extends Activity {
 		
 		setContentView(R.layout.show_all_layout);
 		
-		Intent intent = getIntent();
-		cardNumber = intent.getStringExtra(IntentConstants.CARD_NUMBER);
+//		Intent intent = getIntent();
+//		cardNumber = intent.getStringExtra(IntentConstants.CARD_NUMBER);
+		try{
+			cardNumber = readCardNumber(getIntent());
+		}catch(NFCException ex){
+			App.showToast(this,
+					"Ошибка считывания с карты. Причина:'" + ex.getMessage()
+							+ "'", Duration.SHORT);
+			finish();
+			return;
+		}
 		Log.i(TAG, "received "+cardNumber);
+		initListeners();
+		CardDescriptor card = dp.getByNumber(cardNumber);
+		if(card == null){
+			this.newlyCreated = true;
+			//TODO show dialog, and fillViews
+			showInfoButton.setVisibility(View.GONE);
+			findViewById(R.id.main_scroll_view).setVisibility(View.GONE);
+			Intent updateIntent = new Intent(this, UpdateActivity.class);
+			updateIntent.putExtra(IntentConstants.CARD_NUMBER,cardNumber);
+			updateIntent.putExtra(IntentConstants.REQUEST_CODE, FETCH_CARD_REQUEST_CODE);
+			Log.i(TAG,"before start");
+			startActivityForResult(updateIntent, FETCH_CARD_REQUEST_CODE);
+			Log.i(TAG,"AFTER start");
+		}else{
+			this.newlyCreated = false;
+			fillTextViews(card);
+			this.selectedCard = card;
+		}
 		
-		selectedCard = dp.getByNumber(cardNumber);
-		fillTextViews();
-		
+	}
+	
+	private void initListeners() {
 		valueTextView = (TextView) findViewById(R.id.__name_value_tf);
 		
 		LinearLayout nameLayout = (LinearLayout) findViewById(R.id.name_layout);
@@ -103,14 +143,16 @@ public class ShowAllActivity extends Activity {
 		                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
 					Log.i(TAG, "clicked OK");
 					selectedCard.setCardName(nameValueEditText.getText().toString());
-					try {
-						dp.saveOrUpdateCard(selectedCard);
-						fillTextViews();
-						TranskartWidget.updateAllWidgets(getApplicationContext());
-					} catch (CardSavingException ex) {
-						App.showToast(ShowAllActivity.this, resources.getString(
-								R.string.error_writing_card_to_disk,
-								selectedCard.getCardNumber()), Duration.LONG);
+					fillTextViews(selectedCard);
+					if(!newlyCreated){
+						try {
+							dp.saveOrUpdateCard(selectedCard);
+							TranskartWidget.updateAllWidgets(getApplicationContext());
+						} catch (CardSavingException ex) {
+							App.showToast(ShowAllActivity.this, resources.getString(
+									R.string.error_writing_card_to_disk,
+									selectedCard.getCardNumber()), Duration.LONG);
+						}
 					}
 					
 					revertUiState();
@@ -133,7 +175,7 @@ public class ShowAllActivity extends Activity {
 				return true;
 			}
 		});
-		Button showInfoButton = (Button) findViewById(R.id.show_info_button);
+		showInfoButton = (Button)findViewById(R.id.show_info_button);
 		showInfoButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -142,9 +184,9 @@ public class ShowAllActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-	
+		
 	}
-	
+
 	private void revertUiState(){
 		InputMethodManager imm = (InputMethodManager) 
 				getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -157,33 +199,41 @@ public class ShowAllActivity extends Activity {
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		cardNumber = intent.getStringExtra(IntentConstants.CARD_NUMBER);
+		try{
+			cardNumber = readCardNumber(intent);
+		}catch(NFCException ex){
+			App.showToast(this,
+					"Ошибка считывания с карты. Причина:'" + ex.getMessage()
+							+ "'", Duration.SHORT);
+			finish();
+			return;
+		}
 		Log.i(TAG, "onnewintent received "+cardNumber);
 		
 		selectedCard = dp.getByNumber(cardNumber);
-		fillTextViews();
+		fillTextViews(selectedCard);
 		
 	}
-	private void fillTextViews() {
+	private void fillTextViews(CardDescriptor card) {
 		Resources resources = getResources();
 		TextView columnDescriptionView = (TextView) 
 				findViewById(R.id.__name_description_tf);
 		columnDescriptionView.setText(resources.getString(R.string.card_name_string));
 		TextView columnValueView = (TextView) findViewById(R.id.__name_value_tf);
-		columnValueView.setText(selectedCard.getCardName());
+		columnValueView.setText(card.getCardName());
 		
 		setDescription(R.id.card_balance_block,
-				resources.getString(R.string.card_balance_string), selectedCard.getBalanceString());
+				resources.getString(R.string.card_balance_string), card.getBalanceString());
 		setDescription(R.id.card_number_block,
-				resources.getString(R.string.card_number_string), selectedCard.getCardNumber());
+				resources.getString(R.string.card_number_string), card.getCardNumber());
 		setDescription(R.id.card_type_block,
-				resources.getString(R.string.card_type_string), selectedCard.getCardType());
+				resources.getString(R.string.card_type_string), card.getCardType());
 		setDescription(R.id.last_activated_block,
 				resources.getString(R.string.last_activated_string),
-				selectedCard.getActivationDate().getFormattedString());
+				card.getActivationDate().getFormattedString());
 		setDescription(R.id.valid_until_block,
-				resources.getString(R.string.valid_until_string), selectedCard.getValidUntil().getFormattedString());
-		LastUsageInfo lastUsageInfo = selectedCard.getLastUsageInfo();
+				resources.getString(R.string.valid_until_string), card.getValidUntil().getFormattedString());
+		LastUsageInfo lastUsageInfo = card.getLastUsageInfo();
 		setDescription(R.id.last_used_date_block,
 				resources.getString(R.string.date_string),
 				lastUsageInfo.getDate().getFormattedString());
@@ -197,7 +247,7 @@ public class ShowAllActivity extends Activity {
 		setDescription(R.id.last_used_charge_type_block,
 				resources.getString(R.string.last_used_charge_type_string),
 				lastUsageInfo.getOperationType());
-		RechargeInfo rechargeInfo = selectedCard.getRechargeInfo();
+		RechargeInfo rechargeInfo = card.getRechargeInfo();
 		setDescription(R.id.recharged_on_block,
 				resources.getString(R.string.date_string),
 				rechargeInfo.getRechargeDate().getFormattedString());
@@ -209,7 +259,7 @@ public class ShowAllActivity extends Activity {
 				rechargeInfo.getRechargeAmountString());
 		setDescription(R.id.last_updated_block,
 				resources.getString(R.string.last_updated_string),
-				selectedCard.getLastUpdated().getFormattedString());
+				card.getLastUpdated().getFormattedString());
 	}
 
 	private void setDescription(int layoutId, String columnDescription,
@@ -224,12 +274,26 @@ public class ShowAllActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		Log.i(TAG, "oncreatemenu");
+		
+//		String cardNumber = intent.getStringExtra(IntentConstants.CARD_NUMBER);
+//		CardDescriptor card= App.getDataProvider().getByNumber(cardNumber);
+//		if(card)
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu, menu);
-		MenuItem findItem = menu.findItem(R.id.add_new_card_item);
-		NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-		if (nfcAdapter != null && nfcAdapter.isEnabled()) {
-			findItem.setIcon(getResources().getDrawable(R.drawable.add_card_icon_nfc));
+		if(newlyCreated){
+			menu.findItem(R.id.update_item).setVisible(false);
+			menu.findItem(R.id.delete_card_item).setVisible(false);
+			menu.findItem(R.id.add_new_card_item).setIcon(
+					getResources().getDrawable(R.drawable.ic_action_save));
+			//TODO SHOW SAVE ICON
+		}else{
+			MenuItem findItem = menu.findItem(R.id.add_new_card_item);
+			NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+			if (nfcAdapter != null && nfcAdapter.isEnabled()) {
+				findItem.setIcon(getResources().getDrawable(
+						R.drawable.add_card_icon_nfc));
+			}
 		}
 //		findItem.setI
 		return true;
@@ -253,9 +317,21 @@ public class ShowAllActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.add_new_card_item: {
-			Intent intent = new Intent(this, AddNewCardActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
+			if(newlyCreated){
+				if(selectedCard.getCardName()==null || selectedCard.getCardName().isEmpty()){
+					App.showToast(this, "Имя карты не может быть пустым", Duration.SHORT);
+					return true;
+				}
+				dp.saveCard(selectedCard);
+				App.showToast(this, "Карта '" + selectedCard.getCardName()
+						+ "' успешно сохранена", Duration.SHORT);
+				App.closeActivityAfterDelay(this, 500);
+				TranskartWidget.updateAllWidgets(getApplicationContext());
+			}else{
+				Intent intent = new Intent(this, AddNewCardActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(intent);
+			}
 			return true;
 		}
 		case R.id.update_item: {
@@ -266,7 +342,8 @@ public class ShowAllActivity extends Activity {
 //			intent.putExtra(IntentConstants.BOTTOM_BORDER_INDEX, rect.bottom);
 //			intent.putExtra(IntentConstants.WIDTH, rect.right - rect.left);
 			intent.putExtra(IntentConstants.CARD_NUMBER,cardNumber);
-			startActivityForResult(intent, REQ_CODE);
+			intent.putExtra(IntentConstants.REQUEST_CODE, UPDATE_ACTIVITY_REQUEST_CODE);
+			startActivityForResult(intent, UPDATE_ACTIVITY_REQUEST_CODE);
 			return true;
 		}
 		case R.id.delete_card_item:{
@@ -283,15 +360,66 @@ public class ShowAllActivity extends Activity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.i(TAG, "returned");
-		if(requestCode == REQ_CODE){
-			Log.i(TAG, "reqcode OK "+resultCode);
-			if(resultCode == RESULT_OK){
-				Log.i(TAG, "res code OK");
+		Log.i(TAG,"activity returned. req code "+requestCode+"  res code "+resultCode);
+		if(resultCode == RESULT_OK){
+			Log.i(TAG, "res code OK");
+			if(requestCode == UPDATE_ACTIVITY_REQUEST_CODE){
+				Log.i(TAG, "reqcode upd "+resultCode);
 				selectedCard = dp.getByNumber(cardNumber);
-				fillTextViews();
+				fillTextViews(selectedCard);
+			}else if(requestCode == FETCH_CARD_REQUEST_CODE){
+				Log.i(TAG, "reqcode fetch"+resultCode);
+				findViewById(R.id.main_scroll_view).setVisibility(View.VISIBLE);
+				CardDescriptor newCard = (CardDescriptor) data
+						.getSerializableExtra(IntentConstants.PROCESSED_CARD_DESCRIPTOR);
+				fillTextViews(newCard);
+				this.selectedCard = newCard;
 			}
+		}else{
+			finish();
 		}
+	}
+	
+	private String readCardNumber(Intent intent) throws NFCException {
+		String action = intent.getAction();
+		Log.i(TAG, "reading stuff. "+ action);
+		
+		if(action == null){
+			return intent.getStringExtra(IntentConstants.CARD_NUMBER);
+		}else if (action.equals(NfcAdapter.ACTION_TECH_DISCOVERED)) {
+			Tag intentTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+			MifareClassic mfc = MifareClassic.get(intentTag);
+			byte[] data;
+
+			try {
+				mfc.connect();
+
+				int blockIndex = 0;
+				int sectorIndex = 0;
+				boolean auth = mfc.authenticateSectorWithKeyA(sectorIndex,
+						MifareClassic.KEY_DEFAULT);
+				if (auth) {
+					data = mfc.readBlock(blockIndex);
+
+					ByteBuffer wrapped = ByteBuffer.wrap(new byte[] { 00, 00,
+							00, 00, data[3], data[2], data[1], data[0] });
+					long cardNumber = wrapped.getLong();
+					Log.i(TAG, "handling intent. got number " + cardNumber);
+
+					return String.valueOf(cardNumber);
+				} else {
+					throw new NFCException("Карта не прошла аутентификацию");
+					// TODO Authentication failed - Handle it
+				}
+			} catch (IOException e) {
+				Log.e("tag", "connection dropped", e);
+				throw new NFCException("Потеряно соединение с картой", e);
+			}
+			
+		} else{
+			return null;
+		}
+		
 	}
 
 }

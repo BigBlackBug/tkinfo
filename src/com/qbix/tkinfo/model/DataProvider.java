@@ -8,7 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Map.Entry;
 
-
+import newmodel.CardDescriptor;
 import android.content.Context;
 import android.util.Log;
 

@@ -1,5 +1,6 @@
 package com.qbix.tkinfo.activities;
 
+import newmodel.CardDescriptor;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -14,7 +15,6 @@ import android.widget.RemoteViews;
 import com.qbix.tkinfo.App;
 import com.qbix.tkinfo.R;
 import com.qbix.tkinfo.activities.misc.IntentConstants;
-import com.qbix.tkinfo.model.CardDescriptor;
 import com.qbix.tkinfo.model.DataProvider;
 import com.qbix.tkinfo.model.DataProvider.NoDataException;
 

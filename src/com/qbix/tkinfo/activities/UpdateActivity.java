@@ -2,7 +2,6 @@ package com.qbix.tkinfo.activities;
 
 import java.io.IOException;
 
-import newmodel.CardDescriptor;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +23,7 @@ import com.qbix.tkinfo.App.Duration;
 import com.qbix.tkinfo.R;
 import com.qbix.tkinfo.activities.misc.IntentConstants;
 import com.qbix.tkinfo.model.DataProvider.CardSavingException;
+import com.qbix.tkinfo.model.CardDescriptor;
 import com.qbix.tkinfo.model.TranskartManager;
 import com.qbix.tkinfo.model.TranskartManager.DocumentValidationException;
 import com.qbix.tkinfo.model.TranskartManager.TranskartSession;

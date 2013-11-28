@@ -1,6 +1,5 @@
 package com.qbix.tkinfo.activities;
 
-import newmodel.CardDescriptor;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -15,6 +14,7 @@ import android.widget.RemoteViews;
 import com.qbix.tkinfo.App;
 import com.qbix.tkinfo.R;
 import com.qbix.tkinfo.activities.misc.IntentConstants;
+import com.qbix.tkinfo.model.CardDescriptor;
 import com.qbix.tkinfo.model.DataProvider;
 import com.qbix.tkinfo.model.DataProvider.NoDataException;
 
@@ -185,8 +185,18 @@ public class TranskartWidget extends AppWidgetProvider {
 				String.format(res.getString(R.string.card_name), name));
 		remoteViews.setTextViewText(R.id.card_number_tf,
 				String.format(res.getString(R.string.card_number), number));
-		remoteViews.setTextViewText(R.id.card_balance_tf,
-				String.format(res.getString(R.string.card_balance), balance));
+		String balanceString;
+		Log.i("WIDGE","'"+balance+"'");
+		if(balance.trim().equals("-1")){
+			Log.i("WIDGE", "using unlim");
+			remoteViews.setTextViewText(R.id.card_balance_tf,"Безлимит");
+		}else{
+			Log.i("WIDGE", "using general");
+			remoteViews.setTextViewText(R.id.card_balance_tf,
+					String.format(res.getString(R.string.card_balance), balance));
+		}
+//		remoteViews.setTextViewText(R.id.card_balance_tf,
+//				String.format(res.getString(R.string.card_balance), balance));
 		remoteViews.setTextViewText(R.id.last_modified_tf, String.format(
 				res.getString(R.string.last_updated), lastUpdated));
 	}

@@ -8,7 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Map.Entry;
 
-import newmodel.CardDescriptor;
 import android.content.Context;
 import android.util.Log;
 
@@ -78,6 +77,15 @@ public class DataProvider {
 		return data.get(cardNumber);
 	}
 
+	public boolean containsName(String cardName){
+		for (CardDescriptor cd : data.values()) {
+			if(cd.getCardName().equals(cardName)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	private String getNewCardFile(String cardNumber) {
 		return cardDirectory.getAbsolutePath() + "/" + cardNumber + EXTENTION;
 	}

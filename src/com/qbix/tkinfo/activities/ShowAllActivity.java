@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 
-import newmodel.CardDescriptor;
-import newmodel.CardDescriptor.LastUsageInfo;
-import newmodel.CardDescriptor.RechargeInfo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -38,7 +35,10 @@ import com.qbix.tkinfo.activities.misc.BackKeyPressListener;
 import com.qbix.tkinfo.activities.misc.IntentConstants;
 import com.qbix.tkinfo.activities.misc.NFCException;
 import com.qbix.tkinfo.activities.misc.TranskartEditText;
+import com.qbix.tkinfo.model.CardDescriptor;
 import com.qbix.tkinfo.model.DataProvider;
+import com.qbix.tkinfo.model.CardDescriptor.LastUsageInfo;
+import com.qbix.tkinfo.model.CardDescriptor.RechargeInfo;
 import com.qbix.tkinfo.model.DataProvider.CardSavingException;
 
 public class ShowAllActivity extends Activity {
@@ -199,6 +199,7 @@ public class ShowAllActivity extends Activity {
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
+		Log.i(TAG, "newintent+"+intent);
 		try{
 			cardNumber = readCardNumber(intent);
 		}catch(NFCException ex){
@@ -221,9 +222,15 @@ public class ShowAllActivity extends Activity {
 		columnDescriptionView.setText(resources.getString(R.string.card_name_string));
 		TextView columnValueView = (TextView) findViewById(R.id.__name_value_tf);
 		columnValueView.setText(card.getCardName());
-		
+		int balance = card.getBalance();
+		String balanceString;
+		if(balance == -1){
+			balanceString = "Безлимит";
+		}else{
+			 balanceString = card.getBalanceString();
+		}
 		setDescription(R.id.card_balance_block,
-				resources.getString(R.string.card_balance_string), card.getBalanceString());
+				resources.getString(R.string.card_balance_string), balanceString);
 		setDescription(R.id.card_number_block,
 				resources.getString(R.string.card_number_string), card.getCardNumber());
 		setDescription(R.id.card_type_block,
@@ -254,9 +261,16 @@ public class ShowAllActivity extends Activity {
 		setDescription(R.id.recharged_at_block,
 				resources.getString(R.string.recharge_location_string),
 				rechargeInfo.getRechargeLocation());
+		String rechargeAmountString;
+		int rechargeAmount = rechargeInfo.getRechargeAmount();
+		if(rechargeAmount == -1){
+			rechargeAmountString = "Месячный безлимит";
+		}else{
+			rechargeAmountString = rechargeInfo.getRechargeAmountString();
+		}
 		setDescription(R.id.recharged_by_block,
 				resources.getString(R.string.recharge_amount_string),
-				rechargeInfo.getRechargeAmountString());
+				rechargeAmountString);
 		setDescription(R.id.last_updated_block,
 				resources.getString(R.string.last_updated_string),
 				card.getLastUpdated().getFormattedString());
@@ -405,7 +419,7 @@ public class ShowAllActivity extends Activity {
 							00, 00, data[3], data[2], data[1], data[0] });
 					long cardNumber = wrapped.getLong();
 					Log.i(TAG, "handling intent. got number " + cardNumber);
-
+//					mfc.close();
 					return String.valueOf(cardNumber);
 				} else {
 					throw new NFCException("Карта не прошла аутентификацию");

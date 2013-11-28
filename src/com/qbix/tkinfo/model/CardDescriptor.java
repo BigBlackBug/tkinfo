@@ -1,4 +1,4 @@
-package newmodel;
+package com.qbix.tkinfo.model;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;

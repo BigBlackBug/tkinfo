@@ -3,7 +3,6 @@ package com.qbix.tkinfo.activities;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import newmodel.CardDescriptor;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -28,6 +27,7 @@ import com.qbix.tkinfo.App.Duration;
 import com.qbix.tkinfo.R;
 import com.qbix.tkinfo.model.DataProvider.CardSavingException;
 import com.qbix.tkinfo.model.DataProvider.DuplicateCardException;
+import com.qbix.tkinfo.model.CardDescriptor;
 import com.qbix.tkinfo.model.TranskartManager;
 import com.qbix.tkinfo.model.TranskartManager.DocumentValidationException;
 import com.qbix.tkinfo.model.TranskartManager.TranskartSession;
@@ -191,6 +191,8 @@ public class AddNewCardActivity extends Activity {
 					public void run() {
 						pb.setVisibility(View.GONE);
 						captchaLayout.setVisibility(View.VISIBLE);
+						EditText et = (EditText) activity.findViewById(R.id.captcha_text_view_);
+						et.setText("");
 					}
 				});
 				ImageView c = (ImageView) activity.findViewById(R.id.captcha_image_view_);
@@ -244,6 +246,13 @@ public class AddNewCardActivity extends Activity {
 									Duration.LONG);
 							return null;
 						}
+						if(App.getDataProvider().getByNumber(cardNumber)!=null){
+							App.showToast(activity,
+									resources.getString(
+											R.string.card_already_saved,
+											cardNumber), Duration.LONG);
+							return null;
+						}
 						CardDescriptor cardDescriptor = s
 								.getCardDescriptor(captchaValue
 										.toString(), cardNumber);
@@ -252,6 +261,12 @@ public class AddNewCardActivity extends Activity {
 						if(cardName.trim().isEmpty()){
 							App.showToast(activity, resources
 									.getString(R.string.empty_card_name_field),
+									Duration.LONG);
+							return null;
+						}
+						if (App.getDataProvider().containsName(cardName)) {
+							App.showToast(activity, "Карта с именем '"
+									+ cardName + "' уже сохранена",
 									Duration.LONG);
 							return null;
 						}
@@ -281,18 +296,20 @@ public class AddNewCardActivity extends Activity {
 							App.showToast(activity, resources.getString(
 									R.string.card_adding_success,
 									result.getCardNumber()), Duration.LONG);
+							setResult(RESULT_OK);
 						} catch (DuplicateCardException dex) {
 							App.showToast(activity,
 									resources.getString(
 											R.string.card_already_saved,
 											result.getCardNumber()), Duration.LONG);
+							new CaptchaFetcher().execute();
 							return;
 						} catch (CardSavingException ex) {
 							App.showToast(activity, resources.getString(
 									R.string.error_writing_card_to_disk,
 									result.getCardNumber()), Duration.LONG);
+							setResult(RESULT_CANCELED);
 						}
-						setResult(RESULT_OK);
 						TranskartWidget.updateAllWidgets(getApplicationContext());
 						finish();
 					}else{

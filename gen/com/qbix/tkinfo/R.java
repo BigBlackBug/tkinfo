@@ -43,14 +43,14 @@ public final class R {
         public static final int navigation_refresh=0x7f02000e;
         public static final int next_button_drawable=0x7f02000f;
         public static final int prev_button_drawable=0x7f020010;
-        public static final int refresh=0x7f020011;
-        public static final int refresh_pressed=0x7f020012;
-        public static final int up_arrow=0x7f020013;
-        public static final int up_arrow_pressed=0x7f020014;
-        public static final int update_button_drawable=0x7f020015;
-        public static final int widget_bg=0x7f020016;
-        public static final int widget_preview=0x7f020017;
-        public static final int widget_preview2=0x7f020018;
+        public static final int preview=0x7f020011;
+        public static final int refresh=0x7f020012;
+        public static final int refresh_pressed=0x7f020013;
+        public static final int up_arrow=0x7f020014;
+        public static final int up_arrow_pressed=0x7f020015;
+        public static final int update_button_drawable=0x7f020016;
+        public static final int widget_bg=0x7f020017;
+        public static final int widget_preview=0x7f020018;
     }
     public static final class id {
         public static final int ___name_et=0x7f0a0011;

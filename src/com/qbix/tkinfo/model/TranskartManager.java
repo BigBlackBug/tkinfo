@@ -11,10 +11,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import newmodel.CardDescriptor;
-import newmodel.CardDescriptor.LastUsageInfo;
-import newmodel.CardDescriptor.RechargeInfo;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -26,6 +22,8 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.qbix.tkinfo.R;
+import com.qbix.tkinfo.model.CardDescriptor.LastUsageInfo;
+import com.qbix.tkinfo.model.CardDescriptor.RechargeInfo;
 
 public class TranskartManager {
 
@@ -82,6 +80,42 @@ public class TranskartManager {
 			return downloadImage;
 		}
 
+		private CardDescriptor getGeneralCard(Element table, String cardNumber) {
+			CardDescriptor cd = new CardDescriptor();
+			String cardType = getValueOfRow(table, 0);
+			String balance = getValueOfRow(table, 2);
+			String lastUsedDateString = getValueOfRow(table, 3);
+			String transportNumber = getValueOfRow(table, 4);
+			transportNumber = transportNumber.substring(0,
+					transportNumber.length() - 8);
+			String transportType = getValueOfRow(table, 5);
+			String operationType = getValueOfRow(table, 6);
+			String rechargeDateString = getValueOfRow(table, 7);
+			String rechargeLocation = getValueOfRow(table, 8);
+			String rechargeAmount = getValueOfRow(table, 9);
+
+			cd.setCardType(cardType);
+			cd.setCardNumber(cardNumber);
+
+			cd.setBalance(getMoneyValue(balance));
+
+			cd.setActivationDate(parseDate(rechargeDateString));
+			LastUsageInfo lastUsageInfo = new LastUsageInfo();
+			lastUsageInfo.setOperationType(operationType);
+			lastUsageInfo.setDate(parseDate(lastUsedDateString));
+			lastUsageInfo.setTransportNumber(transportNumber);
+			lastUsageInfo.setTransportType(transportType);
+			cd.setLastUsageInfo(lastUsageInfo);
+
+			RechargeInfo rechargeInfo = new RechargeInfo();
+			rechargeInfo.setRechargeAmount(getMoneyValue(rechargeAmount));
+			rechargeInfo.setRechargeDate(parseDate(rechargeDateString));
+			rechargeInfo.setRechargeLocation(rechargeLocation);
+			cd.setRechargeInfo(rechargeInfo);
+			return cd;
+
+		}
+
 		public CardDescriptor getCardDescriptor(String captcha, String cardNumber)
 				throws IOException, DocumentValidationException, InterruptedException {
 			long sleepTime = nextRequestTime - System.currentTimeMillis();
@@ -93,45 +127,58 @@ public class TranskartManager {
 			CardDescriptor cd = new CardDescriptor();
 
 			Element table = document.select("table").get(2).select("tbody").get(0);
+			Elements select = table.select(".FieldHeader");
+//			Log.i("MANAGER", select.size()+"");
 			try {
-				String cardType = getValueOfRow(table, 0);
-				String balance = getValueOfRow(table, 2);
-				String lastUsedDateString = getValueOfRow(table, 3);
-				String transportNumber = getValueOfRow(table, 4);
-				transportNumber = transportNumber.substring(0, transportNumber.length() - 8);
-				String transportType = getValueOfRow(table, 5);
-				String operationType = getValueOfRow(table, 6);
-				String rechargeDateString = getValueOfRow(table, 7);
-				String rechargeLocation = getValueOfRow(table, 8);
-				String rechargeAmount = getValueOfRow(table, 9);
-
-				cd.setCardType(cardType);
-				cd.setCardNumber(cardNumber);
-				
-				cd.setBalance(getMoneyValue(balance));
-				
-				cd.setActivationDate(parseDate(rechargeDateString));
-				LastUsageInfo lastUsageInfo = new LastUsageInfo();
-				lastUsageInfo.setOperationType(operationType);
-				lastUsageInfo.setDate(parseDate(lastUsedDateString));
-				lastUsageInfo.setTransportNumber(transportNumber);
-				lastUsageInfo.setTransportType(transportType);
-				cd.setLastUsageInfo(lastUsageInfo);
-				
-				RechargeInfo rechargeInfo = new RechargeInfo();
-				rechargeInfo.setRechargeAmount(getMoneyValue(rechargeAmount));
-				rechargeInfo.setRechargeDate(parseDate(rechargeDateString));		
-				rechargeInfo.setRechargeLocation(rechargeLocation);
-				cd.setRechargeInfo(rechargeInfo);
-				
+				if(select.size() == 10){
+					cd = getGeneralCard(table,cardNumber);
+				}else if(select.size() == 8){
+					cd = getUnlimitedCard(table,cardNumber);
+				}else{
+					throw new RuntimeException();
+				}
 			} catch (Exception ex) {
 				throw new DocumentValidationException(resources.getString(
 						R.string.error_fetching_data, cardNumber));
-			}
-			
+			}			
 			cd.setLastUpdated(new Date());
 			return cd;
 		}
+		private CardDescriptor getUnlimitedCard(Element table, String cardNumber) {
+			CardDescriptor cd = new CardDescriptor();
+			String cardType = getValueOfRow(table, 0);
+//			String balance = getValueOfRow(table, 2);
+			String lastUsedDateString = getValueOfRow(table, 2);
+			String transportNumber = getValueOfRow(table, 3);
+			transportNumber = transportNumber.substring(0,
+					transportNumber.length() - 8);
+			String transportType = getValueOfRow(table, 4);
+			String operationType = getValueOfRow(table, 5);
+			String rechargeDateString = getValueOfRow(table,6);
+			String rechargeLocation = getValueOfRow(table, 7);
+//			String rechargeAmount = getValueOfRow(table, 9);
+
+			cd.setCardType(cardType);
+			cd.setCardNumber(cardNumber);
+
+			cd.setBalance(-1);//TODO support unlimited
+
+			cd.setActivationDate(parseDate(rechargeDateString));
+			LastUsageInfo lastUsageInfo = new LastUsageInfo();
+			lastUsageInfo.setOperationType(operationType);
+			lastUsageInfo.setDate(parseDate(lastUsedDateString));
+			lastUsageInfo.setTransportNumber(transportNumber);
+			lastUsageInfo.setTransportType(transportType);
+			cd.setLastUsageInfo(lastUsageInfo);
+
+			RechargeInfo rechargeInfo = new RechargeInfo();
+			rechargeInfo.setRechargeAmount(-1);//TODO support unlimited;
+			rechargeInfo.setRechargeDate(parseDate(rechargeDateString));
+			rechargeInfo.setRechargeLocation(rechargeLocation);
+			cd.setRechargeInfo(rechargeInfo);
+			return cd;
+		}
+
 		private int getMoneyValue(String moneyString){
 			String[] values = moneyString.split(MONEY_VALUE_SPLITTER);
 			return Integer.parseInt(values[0].trim());
